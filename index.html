@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ratnco — Streamer Minecraft sur Twitch (FR)</title>
+<meta name="description" content="ratnco, streamer Minecraft français sur Twitch : survie, constructions et aventures en direct avec la commu. Statut du live, chat en temps réel, planning et liens.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ratnco.netlify.app/">
+<meta name="theme-color" content="#1a1028">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="ratnco">
+<meta property="og:url" content="https://ratnco.netlify.app/">
+<meta property="og:title" content="ratnco — Streamer Minecraft sur Twitch">
+<meta property="og:description" content="Survie, constructions et aventures Minecraft en direct sur Twitch. Rejoins l'aventure bloc par bloc !">
+<meta property="og:image" content="https://ratnco.netlify.app/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo ratnco en blocs de pierre sur un paysage pixel de nuit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ratnco — Streamer Minecraft sur Twitch">
+<meta name="twitter:description" content="Survie, constructions et aventures Minecraft en direct. Rejoins l'aventure !">
+<meta name="twitter:image" content="https://ratnco.netlify.app/assets/img/og.png">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<link rel="preload" href="assets/fonts/ratcraft.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/img/logo.png" as="image" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="modulepreload" href="js/main.js">
+<link rel="modulepreload" href="js/config.js">
+<link rel="modulepreload" href="js/core.js">
+<link rel="modulepreload" href="js/background.js">
+<link rel="modulepreload" href="js/hud.js">
+<link rel="modulepreload" href="js/menus.js">
+<link rel="modulepreload" href="js/live.js">
+<link rel="modulepreload" href="js/sections.js">
+<link rel="modulepreload" href="js/fun.js">
+<link rel="modulepreload" href="js/commands.js">
+<link rel="modulepreload" href="js/skin.js">
+<script>(function(d){var c=d.documentElement.classList,g=function(k){try{return JSON.parse(localStorage.getItem('ratnco.'+k))}catch(e){return null}};c.remove('no-js');c.add('js');var s=g('introSeen')||localStorage.getItem('ratnco_intro_seen')==='true';if(s&&!g('titleAlways')&&location.search.indexOf('titre')<0)c.add('no-title');else c.add('title-pending');if(g('readable'))c.add('readable');if(g('cursor')===false)c.add('no-cursor');var m=g('motion');if(m==='reduced'||(m!=='full'&&matchMedia('(prefers-reduced-motion: reduce)').matches))c.add('reduce-motion');else c.add('motion');addEventListener('load',function(){setTimeout(function(){if(!window.ratncoReady){c.remove('title-pending');c.add('no-title')}},1500)})})(document)</script>
+<script nomodule>document.documentElement.className='no-js'</script>
+<script type="module" src="js/main.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ratnco",
+  "url": "https://ratnco.netlify.app/",
+  "inLanguage": "fr-FR",
+  "about": {
+    "@type": "Person",
+    "name": "ratnco",
+    "description": "Streamer Minecraft français sur Twitch.",
+    "url": "https://ratnco.netlify.app/",
+    "image": "https://ratnco.netlify.app/assets/img/icon-512.png",
+    "knowsAbout": ["Minecraft", "Streaming", "Twitch"],
+    "sameAs": ["https://www.twitch.tv/ratnco"]
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<!-- ═══ Décor : paysage pixel, vidéos, ambiance, particules ═══ -->
+<div id="bg" class="bg" aria-hidden="true">
+  <div class="bg-scene" id="bg-scene"></div>
+  <video class="bg-vid" id="v1" muted playsinline loop preload="none" tabindex="-1"></video>
+  <video class="bg-vid" id="v2" muted playsinline loop preload="none" tabindex="-1"></video>
+  <div class="bg-shade" id="bg-shade"></div>
+  <div class="bg-tint" id="bg-tint"></div>
+  <div class="bg-depth" id="bg-depth"></div>
+  <canvas class="bg-fx" id="bg-fx"></canvas>
+</div>
+
+<!-- ═══ Écran titre ═══ -->
+<div id="title" class="title-screen" role="dialog" aria-modal="true" aria-labelledby="title-h">
+  <div class="title-inner">
+    <h2 id="title-h" class="sr-only">ratnco — écran titre</h2>
+    <div class="logo-wrap">
+      <img class="logo px" src="assets/img/logo.png" width="248" height="52" alt="ratnco" fetchpriority="high">
+      <p class="edition">Édition Twitch</p>
+      <p class="splash" id="splash" aria-hidden="true">Abonne-toi !</p>
+    </div>
+    <div class="menu">
+      <button type="button" class="btn btn-wide" id="title-play">Entrer dans le monde</button>
+      <a class="btn btn-wide" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Regarder le live sur Twitch ↗</a>
+      <button type="button" class="btn btn-wide" data-copy="discord">Discord : copier le pseudo</button>
+      <div class="menu-row">
+        <button type="button" class="btn" id="title-sound" aria-pressed="true">Son : ON</button>
+        <button type="button" class="btn" id="title-options">Options…</button>
+      </div>
+    </div>
+  </div>
+  <p class="title-corner title-version">ratnco Édition Twitch 1.21</p>
+  <p class="title-corner title-credit">Site par Odzigon · Non affilié à Mojang</p>
+</div>
+
+<!-- ═══ Génération du terrain ═══ -->
+<div id="loading" class="loading-screen" aria-hidden="true">
+  <p class="loading-title">Génération du terrain…</p>
+  <div class="loadbar"><span></span></div>
+  <p class="loading-sub" id="loading-sub">Placement des blocs</p>
+</div>
+
+<div id="app">
+  <!-- ═══ HUD du haut ═══ -->
+  <header class="hud-top">
+    <p class="coords" id="coords" aria-hidden="true"><span id="coords-y">Y : 64</span><span id="coords-layer">Bloc d'herbe</span></p>
+    <div class="hud-actions">
+      <button type="button" class="btn btn-icon" id="hud-sound" aria-pressed="false" aria-label="Activer le son (M)" title="Son (M)"><i class="ico ico-sound_off" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-video" aria-label="Changer la vidéo de fond (V)" title="Vidéo de fond (V)"><i class="ico ico-painting" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-progress" aria-label="Progrès (L)" title="Progrès (L)"><i class="ico ico-star" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-options" aria-label="Options (O)" title="Options (O)"><i class="ico ico-gear" aria-hidden="true"></i></button>
+      <a class="btn btn-twitch hud-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Twitch ↗</a>
+    </div>
+  </header>
+
+  <main id="contenu" tabindex="-1">
+
+    <!-- ═══ Accueil ═══ -->
+    <section id="accueil" class="hero" tabindex="-1" aria-labelledby="hero-h">
+      <div class="hero-inner">
+        <div class="frame">
+          <img class="avatar" id="avatar" src="https://files.catbox.moe/50idoe.png" data-fallback="assets/img/avatar.png" width="120" height="120" alt="Photo de profil Twitch de ratnco" fetchpriority="high" decoding="async">
+        </div>
+        <h1 id="hero-h" class="hero-name"><img class="hero-logo px" src="assets/img/logo.png" width="248" height="52" alt="ratnco"></h1>
+        <p class="hero-sub">Streamer <strong class="mc-gold">Minecraft</strong> · Twitch FR</p>
+        <p class="hero-type"><span class="sr-only">Survie, constructions et aventures Minecraft en direct.</span><span id="typer" aria-hidden="true">Survie, constructions &amp; aventures</span><span class="caret" aria-hidden="true">_</span></p>
+        <p class="live-badge" id="live-badge" data-state="loading" role="status"><span class="dot" aria-hidden="true"></span><span class="txt">Vérification du live…</span></p>
+        <div class="hero-cta">
+          <a class="btn btn-twitch btn-lg" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch"><i class="ico ico-twitch" aria-hidden="true"></i>Suivre sur Twitch</a>
+          <button type="button" class="btn btn-lg" data-copy="discord"><i class="ico ico-discord" aria-hidden="true"></i>Copier le pseudo Discord</button>
+        </div>
+      </div>
+      <div class="mine">
+        <button type="button" class="mine-block" id="mine-block" aria-label="Bloc d'herbe : clique ou maintiens pour le miner"><span class="mine-img" id="mine-img"></span></button>
+        <p class="mine-hint" aria-hidden="true">Maintiens pour miner</p>
+      </div>
+      <a class="scroll-hint" href="#live">Creuser <span aria-hidden="true">↓</span></a>
+    </section>
+
+    <div class="strata strata-grass" aria-hidden="true"></div>
+
+    <!-- ═══ Live ═══ -->
+    <section id="live" class="section" tabindex="-1" aria-labelledby="live-h">
+      <h2 id="live-h" class="sec-title">En direct</h2>
+      <p class="sec-sub">Le live et le chat de la commu, en temps réel</p>
+      <div class="live-grid">
+        <div class="player reveal" id="player">
+          <img class="player-thumb" id="player-thumb" alt="" hidden>
+          <div class="player-msg" id="player-msg">
+            <i class="ico ico-eye ico-xl" aria-hidden="true"></i>
+            <p class="player-title" id="player-title">Connexion au serveur…</p>
+            <p class="player-desc" id="player-desc">On vérifie si ratnco est en live.</p>
+            <div class="player-actions">
+              <button type="button" class="btn" id="player-load">▶ Lancer le lecteur ici</button>
+              <a class="btn btn-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Ouvrir sur Twitch ↗</a>
+            </div>
+          </div>
+        </div>
+        <div class="mcchat reveal" id="mcchat">
+          <div class="mcchat-head">
+            <h3 class="mcchat-title">Chat de la commu</h3>
+            <span class="mcchat-status" id="chat-status" data-state="idle">en attente</span>
+          </div>
+          <ol class="mcchat-log" id="chat-log" role="log" aria-label="Messages du chat Twitch de ratnco"></ol>
+          <div class="mcchat-official" id="chat-official" hidden></div>
+          <div class="mcchat-foot">
+            <a class="btn btn-sm" href="https://www.twitch.tv/popout/ratnco/chat?popout=" target="_blank" rel="noopener">Écrire dans le chat ↗</a>
+            <button type="button" class="btn btn-sm" id="chat-toggle" aria-pressed="false">Chat officiel</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strata strata-dirt" aria-hidden="true"></div>
+
+    <!-- ═══ Le monde de ratnco ═══ -->
+    <section id="monde" class="section" tabindex="-1" aria-labelledby="monde-h">
+      <h2 id="monde-h" class="sec-title">Le monde de ratnco</h2>
+      <p class="sec-sub">Qui est ratnco, et ce qu'on fait en live</p>
+      <div class="monde-grid">
+        <article class="book reveal" aria-labelledby="about-h">
+          <p class="book-page" aria-hidden="true">Page 1 sur 1</p>
+          <h3 id="about-h" class="book-title">À propos</h3>
+          <p><strong>ratnco</strong> débarque sur Twitch avec une énergie brute et une authenticité rare. Nouveau streamer <strong>Minecraft</strong>, vrai passionné : pas de filtre, pas de façade.</p>
+          <p>Juste des sessions intenses, des projets qui prennent forme bloc par bloc et la volonté de construire quelque chose de grand, <em>ensemble</em>.</p>
+          <p>Rejoindre la chaîne maintenant, c'est faire partie de l'aventure dès le début. Chaque viewer, chaque follow, <strong>ça compte vraiment</strong>.</p>
+          <p class="book-sign">— ratnco</p>
+        </article>
+        <div class="panel reveal">
+          <h3 class="panel-title">Au programme des lives</h3>
+          <ul class="activities" role="list">
+            <li class="activity">
+              <span class="slot"><i class="ico ico-heart" aria-hidden="true"></i></span>
+              <div><h4>Survie &amp; Hardcore</h4><p>Des mondes où chaque décision compte. En hardcore, une seule vie.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-planks" aria-hidden="true"></i></span>
+              <div><h4>Constructions</h4><p>Bases, villages et méga-projets, bloc par bloc avec les idées du chat.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-redstone" aria-hidden="true"></i></span>
+              <div><h4>Redstone &amp; mods</h4><p>Machines, fermes automatiques et modpacks pour jouer autrement.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-emerald" aria-hidden="true"></i></span>
+              <div><h4>Events commu</h4><p>Défis, mini-jeux et sessions entre viewers : la commu fait partie du jeu.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Planning ═══ -->
+    <section id="planning" class="section" tabindex="-1" aria-labelledby="planning-h">
+      <h2 id="planning-h" class="sec-title">Planning des lives</h2>
+      <p class="sec-sub" id="planning-sub">Les prochains rendez-vous dans l'Overworld</p>
+      <div class="panel planning reveal" id="planning-box">
+        <div class="planning-empty" id="planning-empty">
+          <i class="ico ico-clock ico-xl" aria-hidden="true"></i>
+          <div>
+            <h3 class="panel-title">Horaires annoncés sur Twitch &amp; Discord</h3>
+            <p>Active les notifications sur Twitch pour ne rater aucun live : un clic sur « Suivre » puis sur la cloche.</p>
+            <a class="btn btn-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Suivre ratnco ↗</a>
+          </div>
+        </div>
+        <ol class="week" id="week" hidden></ol>
+        <p class="countdown" id="countdown" hidden></p>
+      </div>
+    </section>
+
+    <div class="strata strata-stone" aria-hidden="true"></div>
+
+    <!-- ═══ Rejoindre ═══ -->
+    <section id="rejoindre" class="section" tabindex="-1" aria-labelledby="rejoindre-h">
+      <h2 id="rejoindre-h" class="sec-title">Rejoindre l'aventure</h2>
+      <p class="sec-sub">Ton inventaire de liens</p>
+      <div class="panel inventory reveal">
+        <h3 class="panel-title">Inventaire</h3>
+        <ul class="inv-grid" id="inv-grid" role="list">
+          <li>
+            <a class="inv-item" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">
+              <span class="slot"><i class="ico ico-twitch" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Twitch</span><span class="inv-sub">twitch.tv/ratnco</span></span>
+              <span class="inv-act" aria-hidden="true">↗</span>
+            </a>
+          </li>
+          <li>
+            <button type="button" class="inv-item" data-copy="twitch">
+              <span class="slot"><i class="ico ico-map" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Copier le lien</span><span class="inv-sub">à partager</span></span>
+              <span class="inv-act" aria-hidden="true">⧉</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="inv-item" data-copy="discord">
+              <span class="slot"><i class="ico ico-discord" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Discord</span><span class="inv-sub">pseudo : ratnco</span></span>
+              <span class="inv-act" aria-hidden="true">⧉</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══ Serveur (affiché si configuré) ═══ -->
+    <section id="serveur" class="section" tabindex="-1" aria-labelledby="serveur-h" hidden>
+      <h2 id="serveur-h" class="sec-title">Le serveur de la commu</h2>
+      <p class="sec-sub">Viens jouer avec nous</p>
+      <div class="server reveal" id="server-card">
+        <span class="server-icon"><i class="ico ico-grass ico-xl" aria-hidden="true"></i></span>
+        <div class="server-info">
+          <p class="server-name" id="server-name">Serveur</p>
+          <p class="server-motd" id="server-motd">Connexion…</p>
+          <p class="server-ip">IP : <code id="server-ip"></code></p>
+        </div>
+        <div class="server-side">
+          <p class="server-players" id="server-players">…</p>
+          <button type="button" class="btn btn-sm" data-copy="server">Copier l'IP</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Statistiques ═══ -->
+    <section id="stats" class="section" tabindex="-1" aria-labelledby="stats-h">
+      <h2 id="stats-h" class="sec-title">Statistiques</h2>
+      <p class="sec-sub">Données en direct de la chaîne</p>
+      <dl class="stats reveal" id="stats-list">
+        <div><dt>Followers</dt><dd id="stat-followers">…</dd></div>
+        <div><dt>Statut</dt><dd id="stat-status">…</dd></div>
+        <div id="stat-game-row" hidden><dt>Jeu en cours</dt><dd id="stat-game">—</dd></div>
+        <div id="stat-viewers-row" hidden><dt>Spectateurs</dt><dd id="stat-viewers">—</dd></div>
+        <div><dt>Langue</dt><dd>Français</dd></div>
+        <div><dt>Jeu de prédilection</dt><dd>Minecraft</dd></div>
+        <div><dt>Aventure lancée en</dt><dd>2024</dd></div>
+        <div><dt>Authenticité</dt><dd>100 %</dd></div>
+      </dl>
+    </section>
+
+    <div class="strata strata-deepslate" aria-hidden="true"></div>
+
+    <!-- ═══ Skin 3D ═══ -->
+    <section id="skin" class="section" tabindex="-1" aria-labelledby="skin-h">
+      <h2 id="skin-h" class="sec-title">Le skin de ratnco</h2>
+      <p class="sec-sub">Fais-le tourner à la souris, au doigt ou avec les flèches</p>
+      <div class="skin-box reveal">
+        <div class="skin-stage" id="skin-stage" tabindex="0" role="img" aria-label="Personnage Minecraft de ratnco en 3D. Utilise les flèches gauche et droite pour le faire pivoter.">
+          <div class="skin-shadow" aria-hidden="true"></div>
+        </div>
+        <div class="skin-actions">
+          <button type="button" class="btn btn-sm" id="skin-walk" aria-pressed="false">Marcher</button>
+          <button type="button" class="btn btn-sm" id="skin-wave">Saluer</button>
+          <button type="button" class="btn btn-sm" id="skin-reset">Recentrer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Clips (affiché si configuré) ═══ -->
+    <section id="clips" class="section" tabindex="-1" aria-labelledby="clips-h" hidden>
+      <h2 id="clips-h" class="sec-title">Best-of</h2>
+      <p class="sec-sub">Les meilleurs moments, accrochés au mur</p>
+      <ul class="clips" id="clips-list" role="list"></ul>
+    </section>
+
+    <!-- ═══ Partenaire ═══ -->
+    <section id="partenaire" class="section" tabindex="-1" aria-labelledby="partenaire-h">
+      <h2 id="partenaire-h" class="sec-title">Partenaire</h2>
+      <p class="sec-sub">Les alliés de l'aventure</p>
+      <article class="panel partner reveal">
+        <span class="slot slot-lg"><i class="ico ico-emerald ico-xl" aria-hidden="true"></i></span>
+        <div class="partner-txt">
+          <h3 class="partner-name">Odzigon <span class="badge">Partenaire officiel</span></h3>
+          <p><strong>Odzigon</strong> est un streamer et développeur passionné, et le créateur de ce site. Créateur de contenu engagé, développeur low-level &amp; web, figure de la scène francophone.</p>
+          <p class="partner-quote">« Fier de l'être. » — ratnco</p>
+          <div class="partner-cta">
+            <a class="btn btn-twitch btn-sm" href="https://www.twitch.tv/odzigon" target="_blank" rel="noopener" data-track="partner">Sa chaîne Twitch ↗</a>
+            <a class="btn btn-sm" href="https://odzigon.netlify.app/" target="_blank" rel="noopener" data-track="partner">Son site ↗</a>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- ═══ Bedrock ═══ -->
+  <footer class="footer" id="credits" tabindex="-1">
+    <div class="footer-inner">
+      <p>Site web fait par <a href="https://odzigon.netlify.app/" target="_blank" rel="noopener">Odzigon</a></p>
+      <p class="footer-quote">« Jamais je ne demanderai de rémunérations pour mes créations aux personnes qui me font avancer. »</p>
+      <p class="footer-keys">Raccourcis : <kbd>1</kbd>–<kbd>9</kbd> barre rapide · <kbd>T</kbd> commandes · <kbd>F3</kbd> debug · <kbd>M</kbd> son · <kbd>V</kbd> vidéo · <kbd>O</kbd> options · <kbd>L</kbd> progrès · <kbd>Échap</kbd> menu</p>
+      <p class="footer-legal">Fan-site non officiel. Minecraft est une marque de Mojang AB. Ce site n'est ni approuvé ni affilié à Mojang ou Microsoft.</p>
+    </div>
+  </footer>
+
+  <!-- ═══ Barre d'XP + barre rapide ═══ -->
+  <nav class="hotbar-wrap" id="hotbar" aria-label="Barre rapide">
+    <p class="item-name" id="item-name" aria-hidden="true"></p>
+    <div class="xp" aria-hidden="true">
+      <span class="xp-level" id="xp-level">0</span>
+      <div class="xp-bar"><span class="xp-fill" id="xp-fill"></span></div>
+    </div>
+    <ol class="hotbar">
+      <li><a class="hb-slot" href="#accueil" data-name="Accueil"><i class="ico ico-grass" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">1</span><span class="sr-only">Accueil</span></a></li>
+      <li><a class="hb-slot" href="#live" data-name="En direct"><i class="ico ico-eye" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">2</span><span class="sr-only">En direct</span></a></li>
+      <li><a class="hb-slot" href="#monde" data-name="Le monde de ratnco"><i class="ico ico-book" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">3</span><span class="sr-only">Le monde de ratnco</span></a></li>
+      <li><a class="hb-slot" href="#planning" data-name="Planning"><i class="ico ico-clock" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">4</span><span class="sr-only">Planning</span></a></li>
+      <li><a class="hb-slot" href="#rejoindre" data-name="Rejoindre"><i class="ico ico-chest" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">5</span><span class="sr-only">Rejoindre</span></a></li>
+      <li><a class="hb-slot" href="#stats" data-name="Statistiques"><i class="ico ico-map" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">6</span><span class="sr-only">Statistiques</span></a></li>
+      <li><a class="hb-slot" href="#skin" data-name="Skin 3D"><i class="ico ico-chestplate" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">7</span><span class="sr-only">Skin 3D</span></a></li>
+      <li><a class="hb-slot" href="#partenaire" data-name="Partenaire"><i class="ico ico-emerald" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">8</span><span class="sr-only">Partenaire</span></a></li>
+      <li><a class="hb-slot" href="#credits" data-name="Bedrock (crédits)"><i class="ico ico-bedrock" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">9</span><span class="sr-only">Crédits</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- Messages façon chat du jeu (notifications + commandes) -->
+  <div class="chatlog" id="chatlog" role="status" aria-live="polite"></div>
+</div>
+
+<!-- Progrès (toasts) -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- Barre de commande -->
+<form class="cmd" id="cmd" hidden autocomplete="off">
+  <ul class="cmd-suggest" id="cmd-suggest" role="listbox" aria-label="Suggestions de commandes"></ul>
+  <label class="sr-only" for="cmd-input">Commande (tape /help pour la liste)</label>
+  <input class="cmd-input" id="cmd-input" type="text" spellcheck="false" autocapitalize="off" enterkeyhint="send" aria-autocomplete="list" aria-controls="cmd-suggest">
+</form>
+
+<!-- Écran de debug F3 -->
+<div class="f3" id="f3" hidden aria-hidden="true"><div class="f3-col" id="f3-left"></div><div class="f3-col f3-right" id="f3-right"></div></div>
+
+<!-- Couche TNT / effets -->
+<div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+
+<!-- ═══ Options ═══ -->
+<dialog class="screen screen-dirt" id="dlg-options" aria-labelledby="opt-h">
+  <div class="screen-inner">
+    <h2 class="screen-title" id="opt-h">Options</h2>
+    <div class="opt-grid">
+      <button type="button" class="btn" data-opt="ambiance">Ambiance : Auto</button>
+      <button type="button" class="btn" data-opt="particles" aria-pressed="true">Particules : ON</button>
+      <button type="button" class="btn" data-opt="videoOn" aria-pressed="true">Vidéo de fond : ON</button>
+      <button type="button" class="btn" data-opt="video">Vidéo : 1</button>
+      <div class="slider"><input type="range" id="opt-volume" min="0" max="100" step="5" aria-label="Volume de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <div class="slider"><input type="range" id="opt-brightness" min="10" max="100" step="5" aria-label="Luminosité de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <div class="slider"><input type="range" id="opt-speed" min="50" max="150" step="5" aria-label="Vitesse de lecture de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <button type="button" class="btn" data-opt="autoRotate" aria-pressed="false">Rotation des vidéos : OFF</button>
+      <button type="button" class="btn" data-opt="sfx" aria-pressed="false">Sons de l'interface : OFF</button>
+      <button type="button" class="btn" data-opt="motion">Animations : Auto</button>
+      <button type="button" class="btn" data-opt="readable" aria-pressed="false">Police : Pixel</button>
+      <button type="button" class="btn" data-opt="cursor" aria-pressed="true">Curseur pixel : ON</button>
+      <button type="button" class="btn" data-opt="coords" aria-pressed="true">Coordonnées : ON</button>
+      <button type="button" class="btn" data-opt="titleAlways" aria-pressed="false">Écran titre : 1re visite</button>
+      <button type="button" class="btn" data-action="progress">Progrès…</button>
+      <button type="button" class="btn" data-action="reset">Réinitialiser…</button>
+    </div>
+    <p class="screen-note">Raccourcis : 1–9 barre rapide · T ou / commandes · F3 debug · M son · V vidéo · L progrès · Échap menu</p>
+    <button type="button" class="btn btn-wide" data-close>Terminé</button>
+  </div>
+</dialog>
+
+<!-- ═══ Menu du jeu (Échap) ═══ -->
+<dialog class="screen screen-dim" id="dlg-pause" aria-labelledby="pause-h">
+  <div class="screen-inner screen-center">
+    <h2 class="screen-title" id="pause-h">Menu du jeu</h2>
+    <button type="button" class="btn btn-wide" data-close>Retour au site</button>
+    <div class="menu-row">
+      <button type="button" class="btn" data-action="progress">Progrès</button>
+      <button type="button" class="btn" data-action="stats">Statistiques</button>
+    </div>
+    <div class="menu-row">
+      <a class="btn" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Twitch ↗</a>
+      <button type="button" class="btn" data-copy="discord">Discord</button>
+    </div>
+    <button type="button" class="btn btn-wide" data-action="options">Options…</button>
+    <button type="button" class="btn btn-wide" data-action="title">Écran titre</button>
+  </div>
+</dialog>
+
+<!-- ═══ Progrès ═══ -->
+<dialog class="screen screen-dirt" id="dlg-progress" aria-labelledby="prog-h">
+  <div class="screen-inner">
+    <h2 class="screen-title" id="prog-h" tabindex="-1" autofocus>Progrès <span class="prog-count" id="prog-count"></span></h2>
+    <ul class="adv-list" id="adv-list" role="list"></ul>
+    <button type="button" class="btn btn-wide" data-close>Terminé</button>
+  </div>
+</dialog>
+
+<!-- ═══ Mort ═══ -->
+<dialog class="screen screen-death" id="dlg-death" aria-labelledby="death-h">
+  <div class="screen-inner screen-center">
+    <h2 class="death-title" id="death-h">Vous êtes mort !</h2>
+    <p class="death-cause" id="death-cause">ratnco a utilisé /kill</p>
+    <p>Score : <span class="mc-yellow" id="death-score">0</span></p>
+    <button type="button" class="btn btn-wide" data-close>Réapparaître</button>
+    <button type="button" class="btn btn-wide" data-action="title">Écran titre</button>
+  </div>
+</dialog>
+
+<noscript><p class="noscript">JavaScript est désactivé : le contenu reste lisible, mais le live, le chat et les effets sont indisponibles.</p></noscript>
+</body>
+</html>

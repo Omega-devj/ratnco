@@ -1,0 +1,18 @@
+# En-têtes Netlify (cache + sécurité).
+# Si vous modifiez le petit script en ligne de index.html, régénérez son empreinte
+# sha256 dans la CSP (python3 tools/csp_hash.py).
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-bNKfV3HxGzewF8Xv9FUk1m1qnhdKpktqY5O1IGcZ09A=' 'sha256-Jji2ewkrNEH9tNF5N5gJRb0INlEW5QL7VLFPBM7i2HE='; style-src 'self'; img-src 'self' data: https:; media-src 'self' https:; font-src 'self'; connect-src 'self' https://decapi.me wss://irc-ws.chat.twitch.tv https://api.mcsrvstat.us; frame-src https://player.twitch.tv https://www.twitch.tv https://clips.twitch.tv; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/assets/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/favicon.ico
+  Cache-Control: public, max-age=604800
+
+/sw.js
+  Cache-Control: no-cache
