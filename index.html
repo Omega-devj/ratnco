@@ -1,2551 +1,470 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ratnco — Streamer Twitch Français</title>
-<meta name="description"  content="ratnco est un nouveau streamer Twitch passionné. Rejoins sa chaîne pour vivre une expérience authentique et intense.">
-<meta name="robots"       content="index, follow">
-<link  rel="canonical"    href="https://ratnco.netlify.app/">
-<meta  name="theme-color" content="#030304">
-
-<!-- Open Graph -->
-<meta property="og:type"        content="website">
-<meta property="og:url"         content="https://ratnco.netlify.app/">
-<meta property="og:title"       content="ratnco — Streamer Twitch Français">
-<meta property="og:description" content="ratnco est un nouveau streamer Twitch passionné. Rejoins sa chaîne pour vivre une expérience authentique.">
-<meta property="og:image"       content="https://files.catbox.moe/50idoe.png">
-
-<!-- Twitter Card -->
-<meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="ratnco — Streamer Twitch Français">
-<meta name="twitter:description" content="ratnco est un nouveau streamer Twitch passionné. Rejoins sa chaîne.">
-<meta name="twitter:image"       content="https://files.catbox.moe/50idoe.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════════════════════════ */
-:root {
-  --bg:        #030304;
-  --surface:   rgba(255,255,255,.030);
-  --surface-h: rgba(255,255,255,.056);
-  --txt:       #e8e8f0;
-  --txt2:      #8585a0;
-  --txt3:      #52526a;
-  --line:      rgba(255,255,255,.062);
-  --line-h:    rgba(255,255,255,.15);
-  --p:         #9147ff;
-  --p-s:       #b48cff;
-  --p-bg:      rgba(145,71,255,.10);
-  --p-bd:      rgba(145,71,255,.24);
-  --radius:    20px;
-  --radius-sm: 12px;
-  --ease:      cubic-bezier(.16,1,.3,1);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: 60px; }
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
-::selection { background: var(--p); color: #fff; }
-body {
-  background: var(--bg); color: var(--txt);
-  font-family: 'Inter', sans-serif; min-height: 100vh;
-  overflow-x: hidden; -webkit-font-smoothing: antialiased;
-  cursor: none;
-}
-body * { cursor: none !important; }
-:focus { outline: none; }
-:focus-visible { outline: 2px solid var(--p-s); outline-offset: 3px; border-radius: 6px; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-/* ═══════════════════════════════════════════════════════════
-   PAGE LOADER
-═══════════════════════════════════════════════════════════ */
-#page-loader {
-  position: fixed; inset: 0; z-index: 19000;
-  background: #000;
-  display: flex; align-items: center; justify-content: center;
-  transition: opacity .6s var(--ease), visibility .6s;
-}
-#page-loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-ring {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 2px solid rgba(145,71,255,.15);
-  border-top-color: var(--p);
-  animation: loaderSpin .8s linear infinite;
-}
-@keyframes loaderSpin { to { transform: rotate(360deg); } }
-
-/* ═══════════════════════════════════════════════════════════
-   CURSOR
-═══════════════════════════════════════════════════════════ */
-.csr-d {
-  position: fixed; top: 0; left: 0; width: 5px; height: 5px;
-  background: #fff; border-radius: 50%; z-index: 99999;
-  pointer-events: none; transform: translate(-50%,-50%);
-  box-shadow: 0 0 8px rgba(255,255,255,.55);
-  transition: width .12s, height .12s, background .15s, opacity .2s;
-  will-change: left, top;
-}
-.csr-r {
-  position: fixed; top: 0; left: 0; width: 28px; height: 28px;
-  border: 1.5px solid rgba(255,255,255,.18); border-radius: 50%;
-  z-index: 99998; pointer-events: none; transform: translate(-50%,-50%);
-  transition: width .22s var(--ease), height .22s var(--ease), border-color .22s, opacity .2s;
-  will-change: left, top;
-}
-.csr-d.h { width: 6px; height: 6px; background: var(--p-s); }
-.csr-r.h { width: 46px; height: 46px; border-color: rgba(145,71,255,.45); }
-body.no-cursor .csr-d,
-body.no-cursor .csr-r { opacity: 0; pointer-events: none; }
-body.no-cursor * { cursor: auto !important; }
-
-/* ═══════════════════════════════════════════════════════════
-   SCROLL BAR
-═══════════════════════════════════════════════════════════ */
-#scroll-bar {
-  position: fixed; top: 0; left: 0; right: 0; height: 2px;
-  z-index: 9997; pointer-events: none;
-  background: linear-gradient(90deg, var(--p), var(--p-s));
-  transform-origin: left; transform: scaleX(0);
-  transition: transform .1s linear;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   TOASTS
-═══════════════════════════════════════════════════════════ */
-#toast-container {
-  position: fixed; bottom: 5rem; right: 1.2rem; z-index: 10000;
-  display: flex; flex-direction: column; gap: .5rem;
-  pointer-events: none;
-}
-.toast {
-  background: rgba(8,8,14,.9);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 10px; padding: .7rem 1rem;
-  font-size: .78rem; color: var(--txt);
-  box-shadow: 0 8px 24px rgba(0,0,0,.5);
-  pointer-events: all;
-  animation: toastIn .3s var(--ease) forwards;
-  display: flex; align-items: center; gap: .6rem;
-}
-.toast.out { animation: toastOut .3s var(--ease) forwards; }
-.toast-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.toast-dot.ok    { background: #4ade80; }
-.toast-dot.info  { background: var(--p-s); }
-.toast-dot.error { background: #f87171; }
-@keyframes toastIn  { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
-@keyframes toastOut { to   { opacity: 0; transform: translateX(16px); } }
-
-/* ═══════════════════════════════════════════════════════════
-   ENTRY SCREEN
-═══════════════════════════════════════════════════════════ */
-#entry {
-  position: fixed; inset: 0; z-index: 9000;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 1.1rem; background: #000;
-  transition: opacity .9s var(--ease), visibility .9s;
-}
-#entry.gone { opacity: 0; visibility: hidden; pointer-events: none; }
-#entry-canvas { position: absolute; inset: 0; pointer-events: none; opacity: .32; }
-.e-skip {
-  position: absolute; top: 1.2rem; right: 1.4rem;
-  font-size: .65rem; color: var(--txt3); letter-spacing: .14em;
-  text-transform: uppercase; font-family: 'Space Grotesk', sans-serif;
-  opacity: 0; animation: eup .9s 1.2s var(--ease) forwards;
-  transition: color .2s; background: none; border: none; padding: 6px 12px;
-}
-.e-skip:hover { color: var(--txt2); }
-.e-logo {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(2.8rem,7vw,4.5rem); font-weight: 700;
-  letter-spacing: -0.07em; color: #fff; position: relative; z-index: 1;
-  text-shadow: 0 0 80px rgba(145,71,255,.5), 0 0 160px rgba(145,71,255,.16);
-  opacity: 0; animation: eup .9s .15s var(--ease) forwards;
-}
-.e-sub {
-  font-size: .72rem; color: var(--txt2); letter-spacing: .22em; text-transform: uppercase;
-  opacity: 0; animation: eup .9s .4s var(--ease) forwards; position: relative; z-index: 1;
-}
-.e-line {
-  width: 1px; height: 38px;
-  background: linear-gradient(to bottom, transparent, rgba(145,71,255,.5), transparent);
-  opacity: 0; animation: eup .9s .62s var(--ease) forwards; position: relative; z-index: 1;
-}
-.e-btn {
-  padding: 11px 44px; border-radius: 50px; background: transparent;
-  border: 1.5px solid rgba(145,71,255,.38); color: var(--p-s);
-  font-size: .8rem; letter-spacing: .16em; text-transform: uppercase;
-  font-family: 'Space Grotesk', sans-serif; font-weight: 500; position: relative; z-index: 1;
-  opacity: 0; animation: eup .9s .78s var(--ease) forwards;
-  transition: background .25s, border-color .28s, color .2s, box-shadow .28s, transform .15s;
-}
-.e-btn:hover { background: var(--p-bg); border-color: rgba(145,71,255,.75); color: #fff; box-shadow: 0 0 36px rgba(145,71,255,.22); transform: translateY(-2px); }
-@keyframes eup { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-
-/* ═══════════════════════════════════════════════════════════
-   VIDEO BACKGROUND
-═══════════════════════════════════════════════════════════ */
-.bg-vid {
-  position: fixed; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: -10; opacity: 0;
-  transition: opacity 1.5s cubic-bezier(.4,0,.2,1);
-  filter: brightness(.36) contrast(1.35) saturate(1.5);
-  transform: scale(1.04); will-change: opacity;
-}
-.bg-vid.on { opacity: 1; }
-.vid-fallback {
-  position: fixed; inset: 0; z-index: -11; pointer-events: none;
-  background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,.6), var(--bg) 70%);
-  opacity: 0; transition: opacity .5s;
-}
-.vid-fallback.show { opacity: 1; }
-.vig {
-  position: fixed; inset: 0; z-index: -9; pointer-events: none; opacity: 1.1;
-  background:
-    radial-gradient(ellipse 130% 60% at 50% 100%, rgba(3,3,4,.97) 0%, transparent 62%),
-    radial-gradient(ellipse 120% 50% at 50% 0%,   rgba(3,3,4,.52) 0%, transparent 58%),
-    radial-gradient(ellipse 35% 100% at 0%   50%, rgba(3,3,4,.42) 0%, transparent 68%),
-    radial-gradient(ellipse 35% 100% at 100% 50%, rgba(3,3,4,.42) 0%, transparent 68%);
-}
-.amb {
-  position: fixed; top: 30%; left: 50%; width: 60vw; height: 60vw;
-  max-width: 700px; max-height: 700px; transform: translate(-50%,-50%);
-  background: radial-gradient(circle, rgba(145,71,255,.05) 0%, transparent 65%);
-  z-index: -8; pointer-events: none; animation: ambPulse 8s ease-in-out infinite;
-}
-@keyframes ambPulse { 0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)} }
-.grain {
-  position: fixed; inset: 0; z-index: 9990; pointer-events: none; opacity: .03;
-  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/></filter><rect width="256" height="256" filter="url(%23f)"/></svg>');
-  animation: grn 1.05s steps(2) infinite;
-}
-@keyframes grn { 0%{background-position:0 0} 25%{background-position:-5% 8%} 50%{background-position:4% -5%} 75%{background-position:-3% 11%} 100%{background-position:6% -2%} }
-body::before {
-  content: ''; display: block; position: fixed; inset: 0; z-index: 9991; pointer-events: none;
-  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.026) 2px,rgba(0,0,0,.026) 4px);
-}
-.vid-error-msg {
-  position: fixed; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
-  background: rgba(5,5,8,.85); border: 1px solid rgba(255,80,80,.22);
-  border-radius: 50px; padding: 7px 18px;
-  font-size: .68rem; color: rgba(255,130,130,.85);
-  font-family: 'Space Grotesk', sans-serif; letter-spacing: .08em;
-  z-index: 700; opacity: 0; pointer-events: none;
-  transition: opacity .3s;
-}
-.vid-error-msg.show { opacity: 1; }
-
-/* ═══════════════════════════════════════════════════════════
-   HUDs
-═══════════════════════════════════════════════════════════ */
-.hud {
-  position: fixed; z-index: 600; display: flex; align-items: center; gap: 8px;
-  background: rgba(5,5,8,.70); backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid var(--line); border-radius: 50px;
-  box-shadow: 0 8px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
-  opacity: 0; pointer-events: none;
-  transition: opacity .5s, border-color .2s;
-}
-.hud.vis { opacity: 1; pointer-events: all; }
-.hud:hover { border-color: var(--line-h); }
-#vol-hud { bottom: 1.4rem; right: 5.2rem; padding: 7px 14px 7px 10px; }
-#vol-hud svg { width: 14px; height: 14px; fill: none; stroke: var(--txt2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; transition: stroke .2s; }
-#vol-hud:hover svg { stroke: var(--p-s); }
-#vr { width: 68px; accent-color: var(--p); outline: none; }
-#vn { font-size: .6rem; color: var(--txt3); font-family: 'Space Grotesk', sans-serif; min-width: 30px; text-align: right; letter-spacing: .05em; }
-#mute-btn { background: none; border: none; padding: 0; display: flex; align-items: center; }
-#mute-btn.muted svg { stroke: rgba(255,80,80,.8) !important; }
-#vsw { bottom: 1.4rem; left: 1.4rem; padding: 7px 15px; }
-#vsw .sw-lbl { font-size: .62rem; color: var(--txt2); letter-spacing: .12em; text-transform: uppercase; font-family: 'Space Grotesk', sans-serif; transition: color .2s; }
-#vsw:hover .sw-lbl { color: #fff; }
-.sw-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; background: var(--p); box-shadow: 0 0 6px var(--p); animation: dotPulse 2.2s infinite; }
-@keyframes dotPulse { 0%,100%{opacity:.4;box-shadow:0 0 0 0 rgba(145,71,255,.4)} 50%{opacity:1;box-shadow:0 0 0 5px rgba(145,71,255,0)} }
-
-/* ═══════════════════════════════════════════════════════════
-   BACK TO TOP
-═══════════════════════════════════════════════════════════ */
-#back-top {
-  position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 600;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(5,5,8,.7); backdrop-filter: blur(20px);
-  border: 1px solid var(--line); color: var(--txt2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: .85rem; line-height: 1;
-  opacity: 0; pointer-events: none;
-  transition: opacity .3s, border-color .2s, color .2s, transform .2s;
-  box-shadow: 0 4px 16px rgba(0,0,0,.4);
-}
-#back-top.vis { opacity: 1; pointer-events: all; }
-#back-top:hover { border-color: var(--line-h); color: #fff; transform: translateY(-3px); }
-
-/* ═══════════════════════════════════════════════════════════
-   SETTINGS PANEL
-═══════════════════════════════════════════════════════════ */
-#settings-panel {
-  position: fixed; top: 0; right: 0; bottom: 0; z-index: 7000;
-  width: min(320px, 92vw);
-  background: rgba(6,6,10,.92);
-  backdrop-filter: blur(30px) saturate(160%);
-  -webkit-backdrop-filter: blur(30px) saturate(160%);
-  border-left: 1px solid var(--line);
-  padding: 1.4rem;
-  transform: translateX(100%);
-  transition: transform .35s var(--ease);
-  overflow-y: auto;
-  display: flex; flex-direction: column; gap: 1.2rem;
-}
-#settings-panel.open { transform: translateX(0); }
-.settings-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--line);
-}
-.settings-title { font-family: 'Space Grotesk', sans-serif; font-size: .95rem; font-weight: 600; color: #fff; }
-.settings-close { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid var(--line); color: var(--txt2); display: flex; align-items: center; justify-content: center; font-size: .85rem; transition: background .2s, color .2s; }
-.settings-close:hover { background: rgba(255,255,255,.13); color: #fff; }
-.settings-section { display: flex; flex-direction: column; gap: .55rem; }
-.settings-section-label { font-size: .58rem; color: var(--txt3); letter-spacing: .16em; text-transform: uppercase; font-family: 'Space Grotesk', sans-serif; margin-bottom: .2rem; }
-.toggle-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: .7rem .85rem; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--line);
-  transition: border-color .2s, background .2s;
-}
-.toggle-row:hover { background: var(--surface-h); border-color: var(--line-h); }
-.toggle-label { font-size: .82rem; color: var(--txt); }
-.toggle-label small { display: block; font-size: .68rem; color: var(--txt3); margin-top: 1px; }
-.toggle {
-  position: relative; width: 36px; height: 20px; flex-shrink: 0;
-}
-.toggle input { opacity: 0; width: 0; height: 0; }
-.toggle-track {
-  position: absolute; inset: 0; border-radius: 20px;
-  background: rgba(255,255,255,.1); border: 1px solid var(--line);
-  transition: background .2s, border-color .2s;
-}
-.toggle input:checked + .toggle-track { background: var(--p); border-color: var(--p); }
-.toggle-thumb {
-  position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
-  border-radius: 50%; background: #fff;
-  transition: transform .2s var(--ease);
-  pointer-events: none;
-}
-.toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
-.kbd-list { display: flex; flex-direction: column; gap: .4rem; }
-.kbd-row { display: flex; align-items: center; justify-content: space-between; font-size: .78rem; color: var(--txt2); }
-.kbd-key { background: rgba(255,255,255,.07); border: 1px solid var(--line); border-radius: 5px; padding: 2px 8px; font-family: 'Space Grotesk', sans-serif; font-size: .7rem; color: var(--txt); }
-
-/* ═══════════════════════════════════════════════════════════
-   NAVBAR
-═══════════════════════════════════════════════════════════ */
-#navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 5000;
-  background: rgba(3,3,4,0);
-  backdrop-filter: blur(0px);
-  border-bottom: 1px solid transparent;
-  transition: background .3s, backdrop-filter .3s, border-color .3s;
-}
-#navbar.scrolled {
-  background: rgba(3,3,4,.8);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border-bottom-color: var(--line);
-}
-.nav-inner {
-  max-width: 880px; margin: 0 auto; padding: 0 1.2rem;
-  height: 52px; display: flex; align-items: center; gap: 1.5rem;
-}
-.nav-brand {
-  font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
-  color: #fff; text-decoration: none; letter-spacing: -0.04em;
-  transition: color .2s; flex-shrink: 0;
-}
-.nav-brand:hover { color: var(--p-s); }
-.nav-links {
-  display: flex; align-items: center; gap: .2rem; flex: 1;
-}
-.nav-link {
-  font-size: .74rem; color: var(--txt3); letter-spacing: .04em;
-  text-decoration: none; padding: .4rem .7rem; border-radius: 8px;
-  transition: color .2s, background .2s;
-  font-family: 'Space Grotesk', sans-serif;
-}
-.nav-link:hover { color: var(--txt); background: rgba(255,255,255,.05); }
-.nav-link.active { color: var(--p-s); background: var(--p-bg); }
-.nav-actions { margin-left: auto; display: flex; align-items: center; gap: .5rem; }
-.nav-btn {
-  font-size: .72rem; color: var(--txt2); padding: .4rem .9rem;
-  border-radius: 8px; border: 1px solid var(--line);
-  background: rgba(255,255,255,.03);
-  font-family: 'Space Grotesk', sans-serif; letter-spacing: .06em;
-  transition: color .2s, border-color .2s, background .2s;
-}
-.nav-btn:hover { color: #fff; border-color: var(--line-h); background: rgba(255,255,255,.07); }
-.nav-btn.active { color: var(--p-s); border-color: var(--p-bd); background: var(--p-bg); }
-
-/* ═══════════════════════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════════════════════ */
-.wrap {
-  position: relative; z-index: 10;
-  max-width: 880px; margin: 0 auto;
-  padding: 0 1.2rem 8rem;
-}
-.section-gap { margin-bottom: .75rem; }
-
-/* ═══════════════════════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════════════════════ */
-header {
-  text-align: center; padding: 5.5rem 0 3.8rem;
-  opacity: 0; transform: translateY(20px);
-  animation: slideUp .75s .3s var(--ease) forwards;
-}
-@keyframes slideUp { to { opacity: 1; transform: none; } }
-.ava-wrap { position: relative; display: inline-block; margin-bottom: 1.6rem; }
-.ava-wrap::before {
-  content: ''; position: absolute; inset: -4px; border-radius: 50%;
-  background: conic-gradient(from 0deg, #9147ff 0%, #c084fc 35%, #60a5fa 60%, #6366f1 80%, #9147ff 100%);
-  animation: spinRing 7s linear infinite; z-index: -1; filter: blur(1px); opacity: .65;
-}
-.ava-wrap::after {
-  content: ''; position: absolute; inset: -12px; border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 40%, rgba(145,71,255,.28) 65%, transparent 100%);
-  animation: spinRing 7s linear infinite; z-index: -2; filter: blur(10px);
-}
-@keyframes spinRing { to { transform: rotate(360deg); } }
-.ava { width: 102px; height: 102px; border-radius: 50%; object-fit: cover; display: block; border: 2.5px solid var(--bg); position: relative; z-index: 1; transition: transform .35s var(--ease); }
-.ava-wrap:hover .ava { transform: scale(1.04); }
-.h-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(3rem,7vw,4.2rem); font-weight: 700;
-  letter-spacing: -0.065em; color: #fff;
-  display: block; position: relative; line-height: 1;
-  text-shadow: 0 0 60px rgba(145,71,255,.16);
-}
-.h-name::before, .h-name::after { content: 'ratnco'; position: absolute; inset: 0; font-family: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; opacity: 0; pointer-events: none; }
-.h-name:hover::before { left: 2px; text-shadow: -2px 0 #ff003c; animation: glitch1 .18s infinite linear alternate-reverse; opacity: .65; }
-.h-name:hover::after  { left:-2px; text-shadow:  2px 0 #00e5ff; animation: glitch2 .25s infinite linear alternate-reverse; opacity: .65; }
-@keyframes glitch1 { 0%{clip-path:inset(20% 0 68% 0)} 50%{clip-path:inset(55% 0 14% 0)} 100%{clip-path:inset(36% 0 42% 0)} }
-@keyframes glitch2 { 0%{clip-path:inset(10% 0 60% 0)} 50%{clip-path:inset(30% 0 18% 0)} 100%{clip-path:inset(72% 0 8% 0)} }
-.tagline { color: var(--txt2); font-size: .92rem; font-weight: 300; margin-top: .45rem; letter-spacing: .02em; min-height: 1.5em; }
-.tc { animation: tcBlink 1s step-end infinite; }
-@keyframes tcBlink { 0%,100%{opacity:1} 50%{opacity:0} }
-.tw-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(145,71,255,.07); border: 1px solid var(--p-bd);
-  backdrop-filter: blur(12px); padding: 7px 18px; border-radius: 50px;
-  font-size: .7rem; color: #c4a7ff; letter-spacing: .1em;
-  font-family: 'Space Grotesk', sans-serif; font-weight: 500;
-  text-decoration: none; margin-top: 1.2rem;
-  transition: background .25s, border-color .28s, transform .2s, box-shadow .28s;
-  box-shadow: 0 4px 20px rgba(0,0,0,.22);
-}
-.tw-pill:hover { background: rgba(145,71,255,.16); border-color: rgba(145,71,255,.52); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(145,71,255,.18); }
-.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--p); box-shadow: 0 0 7px var(--p); animation: livePulse 2.2s infinite; }
-@keyframes livePulse { 0%,100%{opacity:.4;box-shadow:0 0 0 0 rgba(145,71,255,.45)} 50%{opacity:1;box-shadow:0 0 0 5px rgba(145,71,255,0)} }
-.hr { height: 1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,.05) 25%,rgba(255,255,255,.05) 75%,transparent); margin: 0 0 1.8rem; }
-
-/* ═══════════════════════════════════════════════════════════
-   CARD
-═══════════════════════════════════════════════════════════ */
-.card {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 1.35rem 1.5rem;
-  position: relative; overflow: hidden;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.042), 0 1px 0 rgba(0,0,0,.28), 0 16px 40px rgba(0,0,0,.26);
-  opacity: 0; transform: translateY(18px);
-  transition: border-color .3s, background .3s, box-shadow .3s, opacity .65s var(--ease), transform .65s var(--ease);
-  will-change: transform, opacity;
-}
-.card::before { content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg,transparent,rgba(145,71,255,.32),transparent); opacity: 0; transition: opacity .3s; z-index: 1; }
-.card::after  { content: ''; position: absolute; inset: 0; border-radius: var(--radius); background: radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.045) 0%,transparent 58%); opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 0; }
-.card:hover { background: var(--surface-h); border-color: var(--line-h); }
-.card:hover::before, .card:hover::after { opacity: 1; }
-.card > * { position: relative; z-index: 2; }
-.card.in { opacity: 1; transform: none; }
-.card.plain::before, .card.plain::after { display: none; }
-.eyebrow { font-size: .6rem; color: var(--txt3); letter-spacing: .18em; text-transform: uppercase; font-family: 'Space Grotesk', sans-serif; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-.eyebrow::before { content: ''; display: block; width: 16px; height: 1px; background: linear-gradient(to right,var(--p),transparent); }
-
-/* ═══════════════════════════════════════════════════════════
-   GRID
-═══════════════════════════════════════════════════════════ */
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
-.g1 { display: grid; gap: .75rem; }
-.span2 { grid-column: span 2; }
-
-/* ═══════════════════════════════════════════════════════════
-   ABOUT
-═══════════════════════════════════════════════════════════ */
-.about { font-size: .9rem; color: rgba(232,232,240,.58); line-height: 1.85; font-weight: 300; }
-.about em { color: var(--p-s); font-style: normal; font-weight: 500; }
-
-/* ═══════════════════════════════════════════════════════════
-   LINK ROWS
-═══════════════════════════════════════════════════════════ */
-.links-stack { display: flex; flex-direction: column; gap: .45rem; }
-.lrow {
-  display: flex; align-items: center; gap: .9rem;
-  padding: .72rem .9rem; border-radius: var(--radius-sm);
-  background: rgba(255,255,255,.022); border: 1px solid rgba(255,255,255,.055);
-  text-decoration: none; color: var(--txt);
-  transition: background .2s, border-color .2s, transform .2s;
-}
-.lrow:hover { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.13); transform: translateX(4px); }
-.l-ico { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--p-bg); border: 1px solid var(--p-bd); }
-.l-ico svg { width: 16px; height: 16px; fill: none; stroke: var(--p-s); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.l-t .t1 { font-size: .85rem; font-weight: 500; }
-.l-t .t2 { font-size: .71rem; color: var(--txt2); margin-top: 1px; }
-.l-a { margin-left: auto; color: var(--txt3); font-size: .8rem; transition: transform .2s, color .2s; }
-.lrow:hover .l-a { transform: translateX(4px); color: var(--p-s); }
-.lrow-copy { cursor: pointer; background: rgba(255,255,255,.022); border: 1px solid rgba(255,255,255,.055); border-radius: var(--radius-sm); padding: .72rem .9rem; display: flex; align-items: center; gap: .9rem; color: var(--txt); width: 100%; text-align: left; transition: background .2s, border-color .2s, transform .2s; }
-.lrow-copy:hover { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.13); transform: translateX(4px); }
-.more-btn { width: 100%; margin-top: .5rem; padding: .62rem 1rem; border-radius: 10px; text-align: left; background: rgba(255,255,255,.022); border: 1px solid rgba(255,255,255,.052); color: var(--txt2); font-size: .76rem; letter-spacing: .04em; font-family: inherit; transition: background .2s, border-color .2s, color .2s; }
-.more-btn:hover { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.11); color: var(--txt); }
-
-/* ═══════════════════════════════════════════════════════════
-   STATS
-═══════════════════════════════════════════════════════════ */
-.sg { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
-.sb { background: rgba(255,255,255,.018); border: 1px solid rgba(255,255,255,.045); border-radius: var(--radius-sm); padding: .85rem 1rem; transition: border-color .2s, background .2s; }
-.sb:hover { background: rgba(255,255,255,.038); border-color: rgba(255,255,255,.09); }
-.sv { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: #fff; line-height: 1; letter-spacing: -0.04em; }
-.sl { font-size: .68rem; color: var(--txt2); margin-top: .28rem; letter-spacing: .05em; }
-
-/* ═══════════════════════════════════════════════════════════
-   TWITCH CHAT
-═══════════════════════════════════════════════════════════ */
-.chat-wrap { position: relative; height: 480px; border-radius: var(--radius-sm); overflow: hidden; background: rgba(0,0,0,.3); }
-.chat-loader {
-  position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 1rem;
-  background: rgba(3,3,4,.6); z-index: 2;
-  transition: opacity .4s, visibility .4s;
-}
-.chat-loader.hidden { opacity: 0; visibility: hidden; }
-.chat-loader-ring { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(145,71,255,.15); border-top-color: var(--p); animation: loaderSpin .8s linear infinite; }
-.chat-loader-txt { font-size: .75rem; color: var(--txt3); font-family: 'Space Grotesk', sans-serif; letter-spacing: .08em; }
-.chat-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .8rem; background: rgba(3,3,4,.7); z-index: 3; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; text-align: center; padding: 1.5rem; }
-.chat-fallback.show { opacity: 1; visibility: visible; }
-.chat-fallback p { font-size: .85rem; color: var(--txt2); line-height: 1.6; }
-.chat-fallback a { color: var(--p-s); text-decoration: none; border-bottom: 1px solid rgba(145,71,255,.3); transition: border-color .2s; }
-.chat-fallback a:hover { border-color: var(--p-s); }
-#twitch-iframe { width: 100%; height: 100%; border: 0; display: block; opacity: 0; transition: opacity .4s; }
-#twitch-iframe.ready { opacity: 1; }
-
-/* ═══════════════════════════════════════════════════════════
-   PARTNER
-═══════════════════════════════════════════════════════════ */
-.prow { display: flex; align-items: center; gap: 1rem; padding: .9rem 1rem; border-radius: 14px; background: rgba(145,71,255,.04); border: 1px solid rgba(145,71,255,.13); text-decoration: none; color: var(--txt); transition: background .25s, border-color .25s, box-shadow .25s, transform .2s; width: 100%; text-align: left; }
-.prow:hover { background: rgba(145,71,255,.10); border-color: rgba(145,71,255,.32); box-shadow: 0 0 40px rgba(145,71,255,.07); transform: translateX(3px); }
-.p-av { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; background: var(--p-bg); border: 1.5px solid var(--p-bd); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--p-s); transition: border-color .25s, box-shadow .25s; }
-.prow:hover .p-av { border-color: rgba(145,71,255,.55); box-shadow: 0 0 14px rgba(145,71,255,.22); }
-.p-nm    { font-weight: 600; font-size: .95rem; }
-.p-badge { display: inline-block; font-size: .58rem; color: var(--p-s); background: var(--p-bg); border: 1px solid rgba(145,71,255,.22); padding: 2px 9px; border-radius: 20px; letter-spacing: .09em; margin-top: 4px; }
-.p-qt    { font-size: .74rem; color: var(--txt2); margin-top: .3rem; font-style: italic; }
-.p-ar    { margin-left: auto; color: var(--txt3); font-size: .85rem; transition: transform .2s, color .2s; }
-.prow:hover .p-ar { transform: translateX(4px); color: var(--p-s); }
-
-/* ═══════════════════════════════════════════════════════════
-   POPUPS
-═══════════════════════════════════════════════════════════ */
-.pbg { position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,.64); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity .28s, visibility .28s; }
-.pbg.open { opacity: 1; pointer-events: all; visibility: visible; }
-.pop { background: rgba(8,8,14,.84); backdrop-filter: blur(44px) saturate(200%); -webkit-backdrop-filter: blur(44px) saturate(200%); border: 1px solid rgba(255,255,255,.1); border-radius: 22px; padding: 2rem 2.1rem; max-width: 440px; width: 100%; box-shadow: 0 0 0 1px rgba(145,71,255,.06),0 40px 80px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.07); transform: translateY(22px) scale(.97); opacity: 0; transition: transform .35s var(--ease), opacity .3s; }
-.pbg.open .pop { transform: none; opacity: 1; }
-.pop-top   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.pop-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600; color: #fff; }
-.pop-x { width: 30px; height: 30px; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); color: var(--txt2); display: flex; align-items: center; justify-content: center; font-size: .85rem; line-height: 1; transition: background .2s, color .2s, border-color .2s; }
-.pop-x:hover { background: rgba(255,255,255,.13); color: #fff; border-color: var(--line-h); }
-.pop-body  { font-size: .86rem; color: rgba(232,232,240,.6); line-height: 1.76; }
-.pop-body strong { color: #fff; font-weight: 500; }
-.pop-cta { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-top: 1.6rem; padding: .88rem; border-radius: 13px; background: linear-gradient(135deg,rgba(145,71,255,.55),rgba(80,35,170,.55)); border: 1px solid rgba(145,71,255,.38); color: #fff; font-size: .83rem; font-weight: 600; text-decoration: none; font-family: 'Space Grotesk', sans-serif; letter-spacing: .05em; transition: background .22s, transform .2s, box-shadow .22s; }
-.pop-cta:hover { background: linear-gradient(135deg,rgba(145,71,255,.85),rgba(80,35,170,.85)); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(145,71,255,.28); }
-.pop-cta svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ═══════════════════════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════════════════════ */
-.ft { padding: 1.8rem 1.5rem; text-align: center; }
-.ft-by  { font-size: .72rem; color: var(--txt2); }
-.ft-by a { color: rgba(180,140,255,.65); text-decoration: none; transition: color .2s; }
-.ft-by a:hover { color: var(--p-s); }
-.ft-sl { font-size: .63rem; color: rgba(255,255,255,.14); margin: .55rem auto 0; font-style: italic; line-height: 1.65; max-width: 360px; }
-
-/* ═══════════════════════════════════════════════════════════
-   NOSCRIPT
-═══════════════════════════════════════════════════════════ */
-.noscript-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999; background: rgba(145,71,255,.14); border-top: 1px solid var(--p-bd); padding: .75rem 1.2rem; text-align: center; font-size: .78rem; color: var(--p-s); }
-
-/* ═══════════════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════════════ */
-@media (max-width: 640px) {
-  .g2, .g1 { grid-template-columns: 1fr; }
-  .span2 { grid-column: span 1; }
-  .nav-links { display: none; }
-  .chat-wrap { height: 360px; }
-  #vol-hud { right: 4.5rem; }
-  .grain { opacity: .018; }
-  body::before { display: none; }
-  .card { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-  .hud  { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  .ava-wrap::before, .ava-wrap::after { display: none; }
-}
-@media (max-width: 380px) {
-  .e-logo { font-size: 2.4rem; }
-  #vol-hud { display: none; }
-}
-@media (pointer: coarse) {
-  body, body * { cursor: auto !important; }
-  .csr-d, .csr-r { display: none !important; }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   REDUCED MOTION
-═══════════════════════════════════════════════════════════ */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .grain, body::before { display: none; }
-  .ava-wrap::before, .ava-wrap::after, .amb { animation: none; }
-}
-body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after { animation-duration: .01ms !important; transition-duration: .05ms !important; }
-body.no-particles #entry-canvas { display: none; }
-
-/* ═══════════════════════════════════════════════════════════
-   AMÉLIORATIONS ESTHÉTIQUES v2
-═══════════════════════════════════════════════════════════ */
-:root {
-  --glow: 0 0 40px rgba(145,71,255,.18);
-  --grad: linear-gradient(135deg, #b48cff 0%, #9147ff 50%, #7c3aed 100%);
-}
-/* Titre principal: gradient subtil + meilleur glow */
-.h-name {
-  background: linear-gradient(180deg, #ffffff 0%, #d4c5ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 40px rgba(145,71,255,.25));
-}
-/* Cartes: bordure animée au hover */
-.card {
-  transition: border-color .35s, background .35s, box-shadow .4s var(--ease),
-              transform .5s var(--ease), opacity .65s var(--ease);
-}
-.card:hover {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08),
-              0 1px 0 rgba(0,0,0,.3),
-              0 20px 60px rgba(0,0,0,.4),
-              0 0 60px rgba(145,71,255,.08);
-  transform: translateY(-2px);
-}
-/* Eyebrow: ligne décorative améliorée */
-.eyebrow::before {
-  width: 22px;
-  background: var(--grad);
-  box-shadow: 0 0 8px rgba(145,71,255,.5);
-}
-/* Pill Twitch: effet shine */
-.tw-pill { position: relative; overflow: hidden; }
-.tw-pill::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.1) 50%, transparent 70%);
-  transform: translateX(-100%);
-  transition: transform .7s var(--ease);
-}
-.tw-pill:hover::before { transform: translateX(100%); }
-/* Stats: chiffres en gradient */
-.sv {
-  background: linear-gradient(180deg, #ffffff 0%, #b48cff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-/* Boutons HUD: hover lift */
-.hud { transition: opacity .5s, border-color .25s, transform .25s var(--ease), box-shadow .25s; }
-.hud.vis:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(145,71,255,.15), inset 0 1px 0 rgba(255,255,255,.06); }
-/* Avatar ring: plus vif */
-.ava-wrap::before { filter: blur(2px) saturate(1.3); opacity: .8; }
-/* Navbar brand gradient */
-.nav-brand {
-  background: linear-gradient(135deg, #fff 0%, #c4a7ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-/* Partner row: gradient border */
-.prow {
-  background: linear-gradient(135deg, rgba(145,71,255,.06), rgba(145,71,255,.02));
-  transition: all .3s var(--ease);
-}
-.prow:hover { transform: translateX(4px) translateY(-1px); }
-/* Scroll bar: plus lumineux */
-#scroll-bar { height: 2.5px; box-shadow: 0 0 12px rgba(145,71,255,.6); }
-/* Entry button: glow pulse */
-.e-btn {
-  background: rgba(145,71,255,.08);
-  box-shadow: 0 0 0 0 rgba(145,71,255,.4);
-  animation: eup .9s .78s var(--ease) forwards, ebtnPulse 2.8s 1.8s ease-in-out infinite;
-}
-@keyframes ebtnPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(145,71,255,.35); }
-  50%     { box-shadow: 0 0 0 14px rgba(145,71,255,0); }
-}
-.e-btn:hover { animation-play-state: paused; }
-/* Link rows: icône glow au hover */
-.lrow:hover .l-ico, .lrow-copy:hover .l-ico {
-  background: rgba(145,71,255,.18);
-  border-color: rgba(145,71,255,.45);
-  box-shadow: 0 0 16px rgba(145,71,255,.25);
-}
-/* Footer link hover */
-.ft-by a { transition: color .2s, text-shadow .2s; }
-.ft-by a:hover { text-shadow: 0 0 12px rgba(145,71,255,.5); }
-/* Smooth fade-in global */
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-
-
-/* ═══ ESTHÉTIQUE v3 ═══ */
-body {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(145,71,255,.18), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(124,58,237,.12), transparent 55%),
-    var(--bg);
-}
-.card {
-  background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 22px;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  transition: all .4s var(--ease);
-}
-.card::before {
-  content: ''; position: absolute; inset: 0;
-  border-radius: inherit; padding: 1px;
-  background: linear-gradient(135deg, rgba(145,71,255,.35), transparent 40%, transparent 60%, rgba(180,140,255,.25));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  opacity: 0; transition: opacity .4s;
-  pointer-events: none;
-}
-.card:hover::before { opacity: 1; }
-.card:hover {
-  border-color: rgba(145,71,255,.3);
-  transform: translateY(-3px) scale(1.005);
-  box-shadow: 0 24px 70px rgba(0,0,0,.5), 0 0 80px rgba(145,71,255,.12);
-}
-.lrow, .lrow-copy {
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-}
-.lrow:hover, .lrow-copy:hover {
-  background: linear-gradient(135deg, rgba(145,71,255,.12), rgba(145,71,255,.04));
-  border-color: rgba(145,71,255,.35);
-}
-.sb {
-  background: linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.01));
-  border-radius: 14px;
-  transition: all .3s var(--ease);
-}
-.sb:hover {
-  background: linear-gradient(145deg, rgba(145,71,255,.08), rgba(145,71,255,.02));
-  border-color: rgba(145,71,255,.3);
-  transform: translateY(-2px);
-}
-.pop {
-  background: linear-gradient(145deg, rgba(15,10,25,.92), rgba(8,8,14,.88));
-  border-radius: 24px;
-}
-/* Settings: sliders pour contrôle fin */
-.slider-row {
-  display: flex; flex-direction: column; gap: .5rem;
-  padding: .8rem .9rem; border-radius: 12px;
-  background: var(--surface); border: 1px solid var(--line);
-}
-.slider-row:hover { border-color: var(--line-h); }
-.slider-label { display: flex; justify-content: space-between; font-size: .78rem; color: var(--txt); }
-.slider-val { color: var(--p-s); font-family: 'Space Grotesk', sans-serif; font-size: .72rem; }
-.slider-row input[type="range"] {
-  width: 100%; accent-color: var(--p); background: transparent;
-}
-.settings-btn-row {
-  display: flex; gap: .5rem; padding: .65rem .85rem;
-  border-radius: 12px; background: var(--surface); border: 1px solid var(--line);
-}
-.settings-btn {
-  flex: 1; padding: .5rem; border-radius: 8px;
-  background: rgba(255,255,255,.04); border: 1px solid var(--line);
-  color: var(--txt2); font-size: .72rem; font-family: 'Space Grotesk',sans-serif;
-  transition: all .2s;
-}
-.settings-btn:hover { background: rgba(145,71,255,.15); border-color: var(--p-bd); color: #fff; }
-.settings-btn.danger:hover { background: rgba(255,80,80,.12); border-color: rgba(255,80,80,.35); color: #ff9a9a; }
-
-
-/* ═══ MINECRAFT AESTHETIC v4 ═══ */
-:root{
-  --mc-dirt:#866043; --mc-grass:#5ab552; --mc-stone:#7a7a7a;
-  --mc-gold:#fcdc5f; --mc-diamond:#5decf5; --mc-purple:#a347ff;
-  --mc-shadow: inset -3px -3px 0 rgba(0,0,0,.35), inset 3px 3px 0 rgba(255,255,255,.18);
-  --mc-shadow-sm: inset -2px -2px 0 rgba(0,0,0,.4), inset 2px 2px 0 rgba(255,255,255,.15);
-}
-body{
-  image-rendering:pixelated;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(163,71,255,.2), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(93,236,245,.08), transparent 55%),
-    var(--bg);
-}
-/* Tous les titres en pixel font */
-.h-name, .nav-brand, .e-logo, .pop-title, .settings-title, .sv, .p-nm {
-  font-family: 'Press Start 2P', monospace !important;
-  letter-spacing: 0 !important;
-  text-shadow: 3px 3px 0 rgba(0,0,0,.6), 0 0 20px rgba(163,71,255,.4);
-  -webkit-text-fill-color: #fff !important;
-  background: none !important;
-}
-.h-name { font-size: clamp(1.8rem, 4.5vw, 2.8rem) !important; line-height: 1.3 !important; }
-.sv { font-size: 1.2rem !important; color: var(--mc-gold) !important; text-shadow: 2px 2px 0 rgba(0,0,0,.6); }
-.pop-title, .settings-title { font-size: .75rem !important; }
-.nav-brand { font-size: .75rem !important; }
-.e-logo { font-size: clamp(1.6rem, 4vw, 2.4rem) !important; }
-/* VT323 pour le texte secondaire */
-.tagline, .about, .pop-body, .eyebrow, .sl, .t1, .t2, .p-badge, .p-qt, .nav-link, .nav-btn, .settings-section-label, .toggle-label, .slider-label, .ft-by, .ft-sl, .e-sub, .e-skip {
-  font-family: 'VT323', monospace !important;
-  letter-spacing: .02em !important;
-}
-.about, .pop-body { font-size: 1.1rem !important; line-height: 1.5 !important; }
-.tagline { font-size: 1.15rem !important; }
-.eyebrow { font-size: .85rem !important; color: var(--mc-diamond) !important; }
-.sl { font-size: .95rem !important; color: #b8b8d0 !important; }
-.t1 { font-size: 1.1rem !important; } .t2 { font-size: .9rem !important; }
-
-/* Cartes style bloc Minecraft */
-.card {
-  border-radius: 0 !important;
-  border: 3px solid #1a1a20 !important;
-  background: linear-gradient(180deg, rgba(40,30,60,.85), rgba(20,15,35,.9)) !important;
-  box-shadow: var(--mc-shadow), 0 8px 0 #0a0a10, 0 12px 30px rgba(0,0,0,.6) !important;
-  backdrop-filter: blur(6px);
-  image-rendering: pixelated;
-}
-.card::before { display: none !important; }
-.card:hover {
-  transform: translateY(-4px) !important;
-  border-color: var(--mc-purple) !important;
-  box-shadow: var(--mc-shadow), 0 12px 0 #0a0a10, 0 0 40px rgba(163,71,255,.5) !important;
-}
-/* Link rows en blocs */
-.lrow, .lrow-copy, .sb, .prow, .toggle-row, .slider-row, .settings-btn-row, .more-btn {
-  border-radius: 0 !important;
-  border: 2px solid #1a1a20 !important;
-  background: linear-gradient(180deg, rgba(60,45,90,.5), rgba(30,20,55,.6)) !important;
-  box-shadow: var(--mc-shadow-sm) !important;
-}
-.lrow:hover, .lrow-copy:hover, .sb:hover, .prow:hover, .toggle-row:hover {
-  background: linear-gradient(180deg, rgba(163,71,255,.35), rgba(100,40,180,.45)) !important;
-  border-color: var(--mc-purple) !important;
-  transform: translate(2px, -2px) !important;
-}
-.l-ico, .p-av {
-  border-radius: 0 !important;
-  border: 2px solid #1a1a20 !important;
-  background: linear-gradient(180deg, #6b3fbf, #3d1f7a) !important;
-  box-shadow: var(--mc-shadow-sm);
-}
-/* Avatar pixelisé */
-.ava { border-radius: 0 !important; border: 4px solid #1a1a20 !important; image-rendering: pixelated; box-shadow: var(--mc-shadow), 0 0 30px rgba(163,71,255,.4); }
-.ava-wrap::before, .ava-wrap::after { display: none !important; }
-
-/* HUDs en blocs */
-.hud, #back-top {
-  border-radius: 0 !important;
-  border: 2px solid #1a1a20 !important;
-  background: linear-gradient(180deg, rgba(30,20,50,.95), rgba(15,10,30,.95)) !important;
-  box-shadow: var(--mc-shadow-sm), 0 4px 0 #0a0a10 !important;
-}
-#back-top { width: 40px; height: 40px; font-size: 1rem; color: var(--mc-gold); }
-
-/* Pill Twitch en bouton MC */
-.tw-pill {
-  border-radius: 0 !important;
-  border: 3px solid #1a1a20 !important;
-  background: linear-gradient(180deg, #9147ff, #5a1fb8) !important;
-  box-shadow: var(--mc-shadow), 0 5px 0 #0a0a10 !important;
-  font-family: 'VT323', monospace !important;
-  font-size: 1.05rem !important;
-  color: #fff !important;
-  padding: 10px 22px !important;
-}
-.tw-pill:hover { transform: translateY(-3px) !important; box-shadow: var(--mc-shadow), 0 8px 0 #0a0a10, 0 0 40px rgba(163,71,255,.6) !important; }
-
-/* Navbar */
-#navbar.scrolled { border-bottom: 3px solid #1a1a20 !important; }
-.nav-btn {
-  border-radius: 0 !important;
-  border: 2px solid #1a1a20 !important;
-  background: linear-gradient(180deg, rgba(50,35,85,.7), rgba(25,15,45,.8)) !important;
-  box-shadow: var(--mc-shadow-sm);
-  font-family: 'VT323', monospace !important;
-  font-size: .95rem !important;
-}
-.nav-btn:hover { background: linear-gradient(180deg, var(--mc-purple), #5a1fb8) !important; color: #fff !important; }
-.nav-link { font-size: .95rem !important; }
-.nav-link.active { background: var(--mc-purple) !important; color: #fff !important; border-radius: 0 !important; }
-
-/* Entry button MC */
-.e-btn {
-  border-radius: 0 !important;
-  border: 3px solid #1a1a20 !important;
-  background: linear-gradient(180deg, #9147ff, #5a1fb8) !important;
-  color: #fff !important;
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: .6rem !important;
-  padding: 14px 36px !important;
-  box-shadow: var(--mc-shadow), 0 6px 0 #0a0a10 !important;
-  letter-spacing: 0 !important;
-}
-.e-btn:hover { transform: translateY(-3px) !important; box-shadow: var(--mc-shadow), 0 10px 0 #0a0a10, 0 0 50px rgba(163,71,255,.7) !important; background: linear-gradient(180deg, #b06fff, #7a3fd8) !important; }
-
-/* Popup MC */
-.pop {
-  border-radius: 0 !important;
-  border: 4px solid #1a1a20 !important;
-  box-shadow: var(--mc-shadow), 0 12px 0 #0a0a10, 0 40px 80px rgba(0,0,0,.8) !important;
-}
-.pop-cta {
-  border-radius: 0 !important;
-  border: 3px solid #1a1a20 !important;
-  background: linear-gradient(180deg, #9147ff, #5a1fb8) !important;
-  box-shadow: var(--mc-shadow), 0 5px 0 #0a0a10 !important;
-  font-family: 'VT323', monospace !important;
-  font-size: 1.1rem !important;
-}
-.pop-cta:hover { transform: translateY(-2px) !important; }
-
-/* Settings panel */
-#settings-panel { border-left: 4px solid #1a1a20 !important; }
-.settings-close, .pop-x { border-radius: 0 !important; border: 2px solid #1a1a20 !important; }
-.kbd-key { border-radius: 0 !important; border: 2px solid #1a1a20 !important; font-family: 'VT323', monospace !important; font-size: .9rem !important; background: linear-gradient(180deg, #4a3570, #2a1a48) !important; box-shadow: var(--mc-shadow-sm); }
-.kbd-row { font-size: .95rem !important; }
-
-/* Toggle en bloc */
-.toggle-track { border-radius: 0 !important; border: 2px solid #1a1a20 !important; }
-.toggle-thumb { border-radius: 0 !important; border: 1px solid #1a1a20 !important; }
-.toggle input:checked + .toggle-track { background: var(--mc-grass) !important; border-color: #1a1a20 !important; }
-
-/* Chat wrap */
-.chat-wrap { border-radius: 0 !important; border: 3px solid #1a1a20 !important; box-shadow: var(--mc-shadow); }
-
-/* Toast en bloc */
-.toast { border-radius: 0 !important; border: 2px solid #1a1a20 !important; font-family: 'VT323', monospace !important; font-size: .95rem !important; box-shadow: var(--mc-shadow-sm), 0 4px 0 #0a0a10; }
-
-/* Scroll bar verte MC */
-#scroll-bar { background: linear-gradient(90deg, var(--mc-grass), var(--mc-gold), var(--mc-purple)) !important; height: 4px !important; }
-
-/* Loader */
-.loader-ring { border-radius: 0 !important; border-width: 4px !important; }
-
-/* Désactiver gradients text-fill hérités */
-.h-name::before, .h-name::after { display: none !important; }
-
-
-/* ═══ MC POLISH v5 ═══ */
-:root{
-  --mc-bg1:#1a0f2e; --mc-bg2:#0d0820;
-  --mc-border:#0a0612;
-  --mc-purple-l:#b06fff; --mc-purple-d:#4a1a9a;
-}
-
-/* Fond façon grotte: grille de pixels subtile */
-body::after{
-  content:''; position:fixed; inset:0; z-index:-7; pointer-events:none;
-  background-image:
-    linear-gradient(rgba(163,71,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(163,71,255,.025) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, #000 40%, transparent 100%);
-}
-
-/* Texture bloc répétée sur les cards via dégradés */
-.card{
-  background:
-    linear-gradient(180deg, rgba(176,111,255,.08) 0%, transparent 8%, transparent 92%, rgba(0,0,0,.3) 100%),
-    linear-gradient(180deg, var(--mc-bg1), var(--mc-bg2)) !important;
-  border-width: 4px !important;
-  position: relative;
-}
-.card::after{
-  content:''; position:absolute; top:4px; left:4px; right:4px; height:2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
-  pointer-events:none;
-}
-
-/* Eyebrow: label type "minecraft HUD" */
-.eyebrow{
-  display: inline-block !important;
-  padding: 4px 10px !important;
-  background: linear-gradient(180deg, #3d1f7a, #1a0a40) !important;
-  border: 2px solid var(--mc-border) !important;
-  color: var(--mc-gold) !important;
-  text-transform: uppercase !important;
-  box-shadow: var(--mc-shadow-sm), 0 3px 0 var(--mc-border);
-  margin-bottom: 1.2rem !important;
-}
-.eyebrow::before { display: none !important; }
-
-/* Titre ratnco: effet bloc profond */
-.h-name{
-  text-shadow:
-    4px 4px 0 #1a0a40,
-    4px 0 0 #1a0a40,
-    0 4px 0 #1a0a40,
-    -1px -1px 0 #1a0a40,
-    0 0 30px rgba(163,71,255,.6) !important;
-}
-
-/* Stats: encadré gold */
-.sv{
-  display: inline-block;
-  padding: 4px 8px;
-  background: linear-gradient(180deg, #2a1a48, #15092a);
-  border: 2px solid var(--mc-border);
-  box-shadow: var(--mc-shadow-sm);
-  text-shadow: 2px 2px 0 rgba(0,0,0,.8) !important;
-}
-
-/* Avatar: halo type enchantement */
-.ava-wrap{
-  padding: 6px;
-  background: linear-gradient(180deg, #3d1f7a, #1a0a40);
-  border: 3px solid var(--mc-border);
-  box-shadow: var(--mc-shadow), 0 0 40px rgba(163,71,255,.5);
-  display: inline-block;
-}
-.ava{ border-width: 2px !important; box-shadow: var(--mc-shadow-sm) !important; }
-
-/* Pill Twitch: effet enchanted item */
-.tw-pill{
-  animation: mcGlow 2.5s ease-in-out infinite;
-}
-@keyframes mcGlow{
-  0%,100%{ box-shadow: var(--mc-shadow), 0 5px 0 var(--mc-border), 0 0 20px rgba(163,71,255,.4); }
-  50%    { box-shadow: var(--mc-shadow), 0 5px 0 var(--mc-border), 0 0 35px rgba(163,71,255,.7); }
-}
-.pill-dot{
-  border-radius: 0 !important;
-  background: var(--mc-grass) !important;
-  box-shadow: 0 0 8px var(--mc-grass), inset -1px -1px 0 rgba(0,0,0,.4) !important;
-  width: 8px !important; height: 8px !important;
-  animation: mcDot 1s steps(2) infinite;
-}
-@keyframes mcDot{ 0%,100%{opacity:1} 50%{opacity:.4} }
-
-/* Separator en pattern pixel */
-.hr{
-  background: repeating-linear-gradient(90deg, var(--mc-purple) 0 8px, transparent 8px 16px) !important;
-  height: 3px !important;
-  opacity: .4;
-}
-
-/* Scrollbar navigateur en blocs */
-::-webkit-scrollbar{ width: 12px !important; }
-::-webkit-scrollbar-track{ background: #0a0612 !important; border-left: 2px solid #1a0f2e; }
-::-webkit-scrollbar-thumb{
-  background: linear-gradient(180deg, var(--mc-purple-l), var(--mc-purple-d)) !important;
-  border: 2px solid var(--mc-border) !important;
-  border-radius: 0 !important;
-  box-shadow: var(--mc-shadow-sm);
-}
-
-/* Icônes SVG dans les link rows: couleur or */
-.l-ico svg{ stroke: var(--mc-gold) !important; }
-
-/* P-av: lettre dorée */
-.p-av{ color: var(--mc-gold) !important; font-family: 'Press Start 2P', monospace !important; font-size: .9rem !important; text-shadow: 2px 2px 0 rgba(0,0,0,.7); }
-.p-badge{
-  background: linear-gradient(180deg, #fcdc5f, #c99a1a) !important;
-  color: #1a0a00 !important;
-  border: 2px solid var(--mc-border) !important;
-  border-radius: 0 !important;
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: .5rem !important;
-  padding: 4px 8px !important;
-  box-shadow: var(--mc-shadow-sm);
-  text-shadow: none !important;
-}
-
-/* Cursor custom en pixel */
-.csr-d{ border-radius: 0 !important; width: 6px !important; height: 6px !important; background: var(--mc-gold) !important; box-shadow: 0 0 8px var(--mc-gold), 2px 2px 0 rgba(0,0,0,.6) !important; }
-.csr-r{ border-radius: 0 !important; border: 2px solid var(--mc-gold) !important; box-shadow: 2px 2px 0 rgba(0,0,0,.5) !important; }
-.csr-d.h{ background: var(--mc-grass) !important; box-shadow: 0 0 12px var(--mc-grass), 2px 2px 0 rgba(0,0,0,.6) !important; }
-.csr-r.h{ border-color: var(--mc-grass) !important; }
-
-/* Range slider MC */
-input[type="range"]{
-  -webkit-appearance: none; appearance: none;
-  height: 10px; background: #0a0612;
-  border: 2px solid var(--mc-border);
-  box-shadow: var(--mc-shadow-sm);
-}
-input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance: none; appearance: none;
-  width: 16px; height: 18px; cursor: pointer;
-  background: linear-gradient(180deg, var(--mc-purple-l), var(--mc-purple-d));
-  border: 2px solid var(--mc-border);
-  box-shadow: var(--mc-shadow-sm), 0 3px 0 var(--mc-border);
-}
-input[type="range"]::-moz-range-thumb{
-  width: 16px; height: 18px; cursor: pointer;
-  background: linear-gradient(180deg, var(--mc-purple-l), var(--mc-purple-d));
-  border: 2px solid var(--mc-border);
-}
-
-/* Settings section label type panneau */
-.settings-section-label{
-  background: linear-gradient(180deg, #3d1f7a, #1a0a40);
-  border: 2px solid var(--mc-border);
-  padding: 5px 10px !important;
-  color: var(--mc-gold) !important;
-  box-shadow: var(--mc-shadow-sm);
-  font-size: .85rem !important;
-  display: inline-block;
-}
-
-/* Bouton "PASSER" en style MC */
-.e-skip{
-  font-family: 'VT323', monospace !important;
-  font-size: 1rem !important;
-  padding: 6px 14px !important;
-  border: 2px solid var(--mc-border) !important;
-  background: linear-gradient(180deg, rgba(80,80,80,.9), rgba(40,40,40,.9)) !important;
-  color: #ccc !important;
-  box-shadow: var(--mc-shadow-sm);
-}
-.e-skip:hover{ background: linear-gradient(180deg, rgba(120,120,120,.95), rgba(70,70,70,.95)) !important; color:#fff !important; }
-
-/* Ligne déco entry en pixels */
-.e-line{
-  background: repeating-linear-gradient(180deg, var(--mc-purple) 0 4px, transparent 4px 8px) !important;
-  width: 4px !important;
-  height: 44px !important;
-}
-
-/* Page loader en pixel */
-#page-loader{ background: var(--mc-bg2) !important; }
-
-/* Background plus "nuit minecraft" */
-body{
-  background:
-    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(163,71,255,.18), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(93,236,245,.05), transparent 60%),
-    linear-gradient(180deg, #0d0820 0%, #050310 100%) !important;
-}
-
-
-/* ═══ MC v6 - FINITION ═══ */
-/* Animation flottante sur certains éléments */
-@keyframes mcFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-.ava-wrap { animation: mcFloat 3s ease-in-out infinite; }
-@keyframes mcShine {
-  0%,100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-  50%     { filter: brightness(1.15) drop-shadow(0 0 12px rgba(252,220,95,.5)); }
-}
-.sv { animation: mcShine 2.5s ease-in-out infinite; }
-/* Particules flottantes en fond (pixels violets) */
-@keyframes mcParticle {
-  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
-  10%  { opacity: .6; }
-  90%  { opacity: .6; }
-  100% { transform: translateY(-20vh) translateX(30px); opacity: 0; }
-}
-.mc-particle {
-  position: fixed; width: 4px; height: 4px;
-  background: var(--mc-purple); z-index: -5; pointer-events: none;
-  box-shadow: 0 0 6px var(--mc-purple);
-  animation: mcParticle 12s linear infinite;
-}
-/* XP-bar en haut (remplace #scroll-bar) */
-#scroll-bar {
-  height: 8px !important;
-  background: #0a0612 !important;
-  border-bottom: 2px solid var(--mc-border);
-  transform-origin: unset !important;
-  transform: none !important;
-}
-#scroll-bar::after {
-  content: ''; display: block; height: 100%;
-  width: var(--scroll-pct, 0%);
-  background: linear-gradient(180deg, var(--mc-grass), #2d7a2a);
-  border-right: 2px solid var(--mc-border);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.3);
-  transition: width .1s linear;
-}
-/* Level indicator à côté de la progress bar */
-#xp-level {
-  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
-  z-index: 9998; font-family: 'Press Start 2P', monospace;
-  font-size: .5rem; color: var(--mc-grass);
-  text-shadow: 2px 2px 0 rgba(0,0,0,.8);
-  pointer-events: none;
-}
-/* Meilleur glow général sur les focus */
-:focus-visible { outline: 3px solid var(--mc-gold) !important; outline-offset: 2px !important; }
-/* Tooltip MC style sur les HUD */
-.hud[data-tip]:hover::after {
-  content: attr(data-tip);
-  position: absolute; bottom: calc(100% + 10px); left: 50%;
-  transform: translateX(-50%);
-  background: rgba(10,6,18,.98); border: 2px solid var(--mc-border);
-  box-shadow: var(--mc-shadow-sm), 0 3px 0 var(--mc-border);
-  padding: 6px 10px; font-family: 'VT323', monospace; font-size: .85rem;
-  color: var(--mc-gold); white-space: nowrap; pointer-events: none;
-}
-/* Scroll to reveal animation améliorée */
-.card.in { animation: mcSlideIn .6s var(--ease); }
-@keyframes mcSlideIn {
-  from { opacity: 0; transform: translateY(20px) scale(.98); }
-  to   { opacity: 1; transform: none; }
-}
-/* Hover sur link rows: effet "selected" */
-.lrow:hover, .lrow-copy:hover { outline: 2px solid var(--mc-gold); outline-offset: -4px; }
-/* Nav active avec effet gold */
-.nav-link.active { color: var(--mc-gold) !important; background: linear-gradient(180deg, #3d1f7a, #1a0a40) !important; border: 2px solid var(--mc-border); }
-/* Partner card fond spécial */
-.prow { background: linear-gradient(180deg, rgba(252,220,95,.08), rgba(163,71,255,.05)) !important; }
-.prow:hover { background: linear-gradient(180deg, rgba(252,220,95,.18), rgba(163,71,255,.2)) !important; }
-
-
-/* ═══ ICONS v7 ═══ */
-.l-ico {
-  width: 40px !important; height: 40px !important;
-  display: flex !important; align-items: center !important; justify-content: center !important;
-  padding: 0 !important;
-  background: linear-gradient(180deg, #6b3fbf, #2a1050) !important;
-  image-rendering: pixelated;
-}
-.l-ico svg {
-  width: 22px !important; height: 22px !important;
-  stroke: var(--mc-gold) !important;
-  stroke-width: 2.5 !important;
-  fill: none !important;
-  stroke-linecap: square !important;
-  stroke-linejoin: miter !important;
-  filter: drop-shadow(1px 1px 0 #000);
-}
-.lrow:hover .l-ico, .lrow-copy:hover .l-ico {
-  background: linear-gradient(180deg, #fcdc5f, #a86f0e) !important;
-  border-color: var(--mc-gold) !important;
-}
-.lrow:hover .l-ico svg, .lrow-copy:hover .l-ico svg { stroke: #1a0a00 !important; }
-/* Icônes popup CTA */
-.pop-cta svg { width: 18px !important; height: 18px !important; stroke-width: 2.5 !important; filter: drop-shadow(1px 1px 0 #000); }
-/* Mute button icon */
-#vol-hud svg { width: 18px !important; height: 18px !important; stroke-width: 2.5 !important; stroke: var(--mc-gold) !important; filter: drop-shadow(1px 1px 0 #000); }
-#vol-hud:hover svg { stroke: var(--mc-grass) !important; }
-/* Back-to-top: flèche carrée */
-#back-top { font-family: 'Press Start 2P', monospace !important; font-size: .7rem !important; color: var(--mc-gold) !important; text-shadow: 2px 2px 0 #000; }
-/* Sw-dot carré */
-.sw-dot { border-radius: 0 !important; background: var(--mc-grass) !important; width: 8px !important; height: 8px !important; box-shadow: 0 0 8px var(--mc-grass), inset -1px -1px 0 rgba(0,0,0,.4) !important; animation: mcDot 1s steps(2) infinite !important; }
-/* Icônes nav settings ⚙ */
-#settings-toggle { font-size: .9rem !important; color: var(--mc-gold) !important; }
-/* Pop-x et settings-close en bloc */
-.pop-x, .settings-close { color: var(--mc-gold) !important; font-family: 'Press Start 2P', monospace !important; font-size: .5rem !important; }
-/* Achievement icons variants */
-.ach-icon { width: 32px; height: 32px; border: 2px solid #0a0612; flex-shrink: 0; image-rendering: pixelated; box-shadow: inset -2px -2px 0 rgba(0,0,0,.4), inset 2px 2px 0 rgba(255,255,255,.2); }
-.ach-icon.gold    { background: linear-gradient(180deg, #fcdc5f, #c99a1a); }
-.ach-icon.diamond { background: linear-gradient(180deg, #5decf5, #1a8a96); }
-.ach-icon.emerald { background: linear-gradient(180deg, #5ab552, #2a7a2a); }
-.ach-icon.redstone{ background: linear-gradient(180deg, #ff4545, #8a1010); }
-.ach-icon.purple  { background: linear-gradient(180deg, #b06fff, #4a1a9a); }
-.ach-icon.iron    { background: linear-gradient(180deg, #d8d8d8, #707080); }
-/* Arrows > en pixels dans lrow */
-.l-a, .p-ar { font-family: 'Press Start 2P', monospace !important; font-size: .6rem !important; color: var(--mc-gold) !important; text-shadow: 1px 1px 0 #000; }
-
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ratnco — Streamer Minecraft sur Twitch (FR)</title>
+<meta name="description" content="ratnco, streamer Minecraft français sur Twitch : survie, constructions et aventures en direct avec la commu. Statut du live, chat en temps réel, planning et liens.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ratnco.netlify.app/">
+<meta name="theme-color" content="#1a1028">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="ratnco">
+<meta property="og:url" content="https://ratnco.netlify.app/">
+<meta property="og:title" content="ratnco — Streamer Minecraft sur Twitch">
+<meta property="og:description" content="Survie, constructions et aventures Minecraft en direct sur Twitch. Rejoins l'aventure bloc par bloc !">
+<meta property="og:image" content="https://ratnco.netlify.app/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo ratnco en blocs de pierre sur un paysage pixel de nuit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ratnco — Streamer Minecraft sur Twitch">
+<meta name="twitter:description" content="Survie, constructions et aventures Minecraft en direct. Rejoins l'aventure !">
+<meta name="twitter:image" content="https://ratnco.netlify.app/assets/img/og.png">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<link rel="preload" href="assets/fonts/ratcraft.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/img/logo.png" as="image" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="modulepreload" href="js/main.js">
+<link rel="modulepreload" href="js/config.js">
+<link rel="modulepreload" href="js/core.js">
+<link rel="modulepreload" href="js/background.js">
+<link rel="modulepreload" href="js/hud.js">
+<link rel="modulepreload" href="js/menus.js">
+<link rel="modulepreload" href="js/live.js">
+<link rel="modulepreload" href="js/sections.js">
+<link rel="modulepreload" href="js/fun.js">
+<link rel="modulepreload" href="js/commands.js">
+<link rel="modulepreload" href="js/skin.js">
+<script>(function(d){var c=d.documentElement.classList,g=function(k){try{return JSON.parse(localStorage.getItem('ratnco.'+k))}catch(e){return null}};c.remove('no-js');c.add('js');var s=g('introSeen')||localStorage.getItem('ratnco_intro_seen')==='true';if(s&&!g('titleAlways')&&location.search.indexOf('titre')<0)c.add('no-title');else c.add('title-pending');if(g('readable'))c.add('readable');if(g('cursor')===false)c.add('no-cursor');var m=g('motion');if(m==='reduced'||(m!=='full'&&matchMedia('(prefers-reduced-motion: reduce)').matches))c.add('reduce-motion');else c.add('motion');addEventListener('load',function(){setTimeout(function(){if(!window.ratncoReady){c.remove('title-pending');c.add('no-title')}},1500)})})(document)</script>
+<script nomodule>document.documentElement.className='no-js'</script>
+<script type="module" src="js/main.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ratnco",
+  "url": "https://ratnco.netlify.app/",
+  "inLanguage": "fr-FR",
+  "about": {
+    "@type": "Person",
+    "name": "ratnco",
+    "description": "Streamer Minecraft français sur Twitch.",
+    "url": "https://ratnco.netlify.app/",
+    "image": "https://ratnco.netlify.app/assets/img/icon-512.png",
+    "knowsAbout": ["Minecraft", "Streaming", "Twitch"],
+    "sameAs": ["https://www.twitch.tv/ratnco"]
+  }
+}
+</script>
 </head>
 <body>
+<a class="skip" href="#contenu">Aller au contenu</a>
 
-<noscript><div class="noscript-bar">JavaScript est désactivé — certaines fonctionnalités sont indisponibles.</div></noscript>
-
-<!-- ── PAGE LOADER ── -->
-<div id="page-loader" aria-hidden="true" aria-label="Chargement">
-  <div class="loader-ring"></div>
+<!-- ═══ Décor : paysage pixel, vidéos, ambiance, particules ═══ -->
+<div id="bg" class="bg" aria-hidden="true">
+  <div class="bg-scene" id="bg-scene"></div>
+  <video class="bg-vid" id="v1" muted playsinline loop preload="none" tabindex="-1"></video>
+  <video class="bg-vid" id="v2" muted playsinline loop preload="none" tabindex="-1"></video>
+  <div class="bg-shade" id="bg-shade"></div>
+  <div class="bg-tint" id="bg-tint"></div>
+  <div class="bg-depth" id="bg-depth"></div>
+  <canvas class="bg-fx" id="bg-fx"></canvas>
 </div>
 
-<!-- ── CURSOR ── -->
-<div class="csr-d" id="cd" aria-hidden="true"></div>
-<div class="csr-r" id="cr" aria-hidden="true"></div>
-
-<!-- ── SCROLL PROGRESS ── -->
-<div id="scroll-bar" aria-hidden="true"></div>
-<div id="xp-level">LVL 0</div>
-<div id="mc-particles" aria-hidden="true"></div>
-
-<!-- ── TOASTS ── -->
-<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
-
-<!-- ── ENTRY SCREEN ── -->
-<div id="entry" role="dialog" aria-modal="true" aria-label="Écran d'entrée ratnco">
-  <canvas id="entry-canvas" aria-hidden="true"></canvas>
-  <button type="button" class="e-skip" id="skip-btn">PASSER</button>
-  <p class="e-logo" aria-hidden="true">ratnco</p>
-  <p class="e-sub">Streamer · Twitch.tv/ratnco</p>
-  <div class="e-line" aria-hidden="true"></div>
-  <button type="button" class="e-btn" id="enter-btn">Entrer</button>
+<!-- ═══ Écran titre ═══ -->
+<div id="title" class="title-screen" role="dialog" aria-modal="true" aria-labelledby="title-h">
+  <div class="title-inner">
+    <h2 id="title-h" class="sr-only">ratnco — écran titre</h2>
+    <div class="logo-wrap">
+      <img class="logo px" src="assets/img/logo.png" width="248" height="52" alt="ratnco" fetchpriority="high">
+      <p class="edition">Édition Twitch</p>
+      <p class="splash" id="splash" aria-hidden="true">Abonne-toi !</p>
+    </div>
+    <div class="menu">
+      <button type="button" class="btn btn-wide" id="title-play">Entrer dans le monde</button>
+      <a class="btn btn-wide" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Regarder le live sur Twitch ↗</a>
+      <button type="button" class="btn btn-wide" data-copy="discord">Discord : copier le pseudo</button>
+      <div class="menu-row">
+        <button type="button" class="btn" id="title-sound" aria-pressed="true">Son : ON</button>
+        <button type="button" class="btn" id="title-options">Options…</button>
+      </div>
+    </div>
+  </div>
+  <p class="title-corner title-version">ratnco Édition Twitch 1.21</p>
+  <p class="title-corner title-credit">Site par Odzigon · Non affilié à Mojang</p>
 </div>
 
-<!-- ── BG VIDEO FALLBACK ── -->
-<div class="vid-fallback" aria-hidden="true"></div>
-
-<!-- ── BG VIDEOS ── -->
-<video class="bg-vid" id="v1"
-  src="https://files.catbox.moe/3khymp.mp4"
-  poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='1'%3E%3Crect fill='%23030304'/%3E%3C/svg%3E"
-  loop playsinline preload="metadata"
-  aria-hidden="true"
-  title="Vidéo de fond 1"></video>
-
-<video class="bg-vid" id="v2"
-  src="https://files.catbox.moe/qsy0b3.mp4"
-  poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='1'%3E%3Crect fill='%230a0515'/%3E%3C/svg%3E"
-  loop playsinline preload="metadata"
-  aria-hidden="true"
-  title="Vidéo de fond 2"></video>
-
-<div class="vig"   aria-hidden="true"></div>
-<div class="amb"   aria-hidden="true"></div>
-<div class="grain" aria-hidden="true"></div>
-
-<!-- ── VOL HUD ── -->
-<div id="vol-hud" class="hud" data-tip="Volume [↑/↓]" role="group" aria-label="Contrôle du volume">
-  <button type="button" id="mute-btn" aria-label="Couper le son" aria-pressed="false">
-    <svg id="v-ico" width="14" height="14" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-      <path id="vlines" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-    </svg>
-  </button>
-  <label for="vr" class="sr-only">Volume de la vidéo</label>
-  <input type="range" id="vr" min="0" max="100" value="40" step="1"
-         aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"
-         aria-label="Volume">
-  <span id="vn" aria-live="polite" aria-atomic="true">40%</span>
+<!-- ═══ Génération du terrain ═══ -->
+<div id="loading" class="loading-screen" aria-hidden="true">
+  <p class="loading-title">Génération du terrain…</p>
+  <div class="loadbar"><span></span></div>
+  <p class="loading-sub" id="loading-sub">Placement des blocs</p>
 </div>
 
-<!-- ── VID SWITCH ── -->
-<button type="button" id="vsw" class="hud" data-tip="Changer vidéo [V]" aria-label="Changer la vidéo de fond">
-  <span class="sw-dot" aria-hidden="true"></span>
-  <span class="sw-lbl" id="vsl">Vidéo 1</span>
-</button>
-
-<!-- ── BACK TO TOP ── -->
-<button type="button" id="back-top" aria-label="Retour en haut de page">↑</button>
-
-<!-- ── VIDEO ERROR ── -->
-<div class="vid-error-msg" id="vid-error" role="status" aria-live="polite"></div>
-
-<!-- ── SETTINGS PANEL ── -->
-<aside id="settings-panel" aria-label="Panneau de réglages" hidden>
-  <div class="settings-header">
-    <span class="settings-title">Réglages</span>
-    <button type="button" class="settings-close" id="settings-close" aria-label="Fermer les réglages">✕</button>
-  </div>
-
-  <div class="settings-section">
-    <div class="settings-section-label">Apparence</div>
-
-    <label class="toggle-row">
-      <span class="toggle-label">
-        Particules
-        <small>Animation de l'écran d'entrée</small>
-      </span>
-      <span class="toggle">
-        <input type="checkbox" id="toggle-particles" role="switch" aria-checked="true">
-        <span class="toggle-track"></span>
-        <span class="toggle-thumb"></span>
-      </span>
-    </label>
-
-    <label class="toggle-row">
-      <span class="toggle-label">
-        Curseur personnalisé
-        <small>Remplace le curseur système</small>
-      </span>
-      <span class="toggle">
-        <input type="checkbox" id="toggle-cursor" role="switch" aria-checked="true">
-        <span class="toggle-track"></span>
-        <span class="toggle-thumb"></span>
-      </span>
-    </label>
-
-    <label class="toggle-row">
-      <span class="toggle-label">
-        Réduire les animations
-        <small>Pour les appareils moins puissants</small>
-      </span>
-      <span class="toggle">
-        <input type="checkbox" id="toggle-anim" role="switch" aria-checked="false">
-        <span class="toggle-track"></span>
-        <span class="toggle-thumb"></span>
-      </span>
-    </label>
-  </div>
-
-  <div class="settings-section">
-    <div class="settings-section-label">Vidéo & Audio</div>
-    <label class="toggle-row">
-      <span class="toggle-label">Rotation automatique<small>Change toutes les 2 min</small></span>
-      <span class="toggle"><input type="checkbox" id="toggle-autorot" role="switch"><span class="toggle-track"></span><span class="toggle-thumb"></span></span>
-    </label>
-    <div class="slider-row">
-      <div class="slider-label"><span>Volume</span><span class="slider-val" id="set-vol-val">40%</span></div>
-      <input type="range" id="set-vol" min="0" max="100" value="40">
+<div id="app">
+  <!-- ═══ HUD du haut ═══ -->
+  <header class="hud-top">
+    <p class="coords" id="coords" aria-hidden="true"><span id="coords-y">Y : 64</span><span id="coords-layer">Bloc d'herbe</span></p>
+    <div class="hud-actions">
+      <button type="button" class="btn btn-icon" id="hud-sound" aria-pressed="false" aria-label="Activer le son (M)" title="Son (M)"><i class="ico ico-sound_off" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-video" aria-label="Changer la vidéo de fond (V)" title="Vidéo de fond (V)"><i class="ico ico-painting" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-progress" aria-label="Progrès (L)" title="Progrès (L)"><i class="ico ico-star" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-icon" id="hud-options" aria-label="Options (O)" title="Options (O)"><i class="ico ico-gear" aria-hidden="true"></i></button>
+      <a class="btn btn-twitch hud-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Twitch ↗</a>
     </div>
-    <div class="slider-row">
-      <div class="slider-label"><span>Luminosité vidéo</span><span class="slider-val" id="set-bright-val">36%</span></div>
-      <input type="range" id="set-bright" min="10" max="100" value="36">
-    </div>
-    <div class="slider-row">
-      <div class="slider-label"><span>Vitesse de lecture</span><span class="slider-val" id="set-speed-val">1.0×</span></div>
-      <input type="range" id="set-speed" min="50" max="150" value="100" step="5">
-    </div>
-    <div class="settings-btn-row">
-      <button type="button" class="settings-btn" id="btn-vid1">Vidéo 1</button>
-      <button type="button" class="settings-btn" id="btn-vid2">Vidéo 2</button>
-    </div>
-  </div>
-  <div class="settings-section">
-    <div class="settings-section-label">Données</div>
-    <div class="settings-btn-row">
-      <button type="button" class="settings-btn danger" id="btn-reset">Réinitialiser tout</button>
-    </div>
-  </div>
-
-  <div class="settings-section">
-    <div class="settings-section-label">Raccourcis clavier</div>
-    <div class="kbd-list">
-      <div class="kbd-row"><span>Mute / Unmute</span>    <kbd class="kbd-key">M</kbd></div>
-      <div class="kbd-row"><span>Changer vidéo</span>    <kbd class="kbd-key">V</kbd></div>
-      <div class="kbd-row"><span>Réglages</span>         <kbd class="kbd-key">S</kbd></div>
-      <div class="kbd-row"><span>Volume +</span>         <kbd class="kbd-key">↑</kbd></div>
-      <div class="kbd-row"><span>Volume −</span>         <kbd class="kbd-key">↓</kbd></div>
-      <div class="kbd-row"><span>Fermer popup</span>     <kbd class="kbd-key">Esc</kbd></div>
-    </div>
-  </div>
-</aside>
-
-<!-- ── POPUP TWITCH ── -->
-<div class="pbg" id="pp-tw"
-     role="dialog" aria-modal="true" aria-labelledby="pp-tw-title" aria-hidden="true">
-  <div class="pop">
-    <div class="pop-top">
-      <h2 class="pop-title" id="pp-tw-title">ratnco — Twitch</h2>
-      <button type="button" class="pop-x" id="pp-tw-close" aria-label="Fermer">✕</button>
-    </div>
-    <div class="pop-body">
-      <strong>ratnco</strong> est un tout nouveau streamer qui lance son aventure sur Twitch.
-      Pas de chichi, pas de mise en scène artificielle — juste un créateur qui donne tout, pour de vrai.<br><br>
-      Rejoindre sa chaîne maintenant, c'est faire partie de l'histoire dès le début.
-      Chaque viewer, chaque follow, <strong>ça compte vraiment</strong>.
-    </div>
-    <a href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener noreferrer" class="pop-cta">
-      <svg viewBox="0 0 24 24"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"/></svg>
-      Voir la chaîne Twitch
-    </a>
-  </div>
-</div>
-
-<!-- ── POPUP PARTNER ── -->
-<div class="pbg" id="pp-pa"
-     role="dialog" aria-modal="true" aria-labelledby="pp-pa-title" aria-hidden="true">
-  <div class="pop">
-    <div class="pop-top">
-      <h2 class="pop-title" id="pp-pa-title">Partenaire — Odzigon</h2>
-      <button type="button" class="pop-x" id="pp-pa-close" aria-label="Fermer">✕</button>
-    </div>
-    <div class="pop-body">
-      <strong>Odzigon</strong> est un streamer et développeur passionné — et le créateur de ce site web.
-      ratnco est fier de le compter comme partenaire.<br><br>
-      Créateur de contenu engagé, développeur low-level &amp; web, figure de la scène francophone.
-      <br><br>
-      <span style="color:rgba(196,167,255,.72);font-style:italic">"fier de l'être" — ratnco</span>
-    </div>
-    <a href="https://www.twitch.tv/odzigon" target="_blank" rel="noopener noreferrer" class="pop-cta">
-      <svg viewBox="0 0 24 24"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"/></svg>
-      Voir la chaîne Odzigon
-    </a>
-  </div>
-</div>
-
-<!-- ── NAVBAR ── -->
-<nav id="navbar" aria-label="Navigation principale">
-  <div class="nav-inner">
-    <a href="#top" class="nav-brand">ratnco</a>
-    <div class="nav-links" role="list">
-      <a href="#about"   class="nav-link" role="listitem">À propos</a>
-      <a href="#links"   class="nav-link" role="listitem">Liens</a>
-      <a href="#chat"    class="nav-link" role="listitem">Chat</a>
-      <a href="#partner" class="nav-link" role="listitem">Partenaire</a>
-    </div>
-    <div class="nav-actions">
-      <a href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener noreferrer"
-         class="nav-btn">Twitch ↗</a>
-      <button type="button" class="nav-btn" id="settings-toggle"
-              aria-controls="settings-panel" aria-expanded="false"
-              aria-label="Ouvrir les réglages">⚙</button>
-    </div>
-  </div>
-</nav>
-
-<!-- ── PAGE ── -->
-<div class="wrap">
-
-  <header id="top">
-    <div class="ava-wrap">
-      <img class="ava"
-           src="https://files.catbox.moe/50idoe.png"
-           alt="Photo de profil Twitch de ratnco"
-           width="102" height="102"
-           loading="eager" decoding="async">
-    </div>
-    <h1 class="h-name">ratnco</h1>
-    <p class="tagline">
-      <span id="tw" aria-live="polite"></span><span class="tc" aria-hidden="true">|</span>
-    </p>
-    <a class="tw-pill" href="https://www.twitch.tv/ratnco"
-       target="_blank" rel="noopener noreferrer">
-      <span class="pill-dot" aria-hidden="true"></span>
-      TWITCH.TV/RATNCO
-    </a>
   </header>
 
-  <hr class="hr" aria-hidden="true">
+  <main id="contenu" tabindex="-1">
 
-  <main>
-
-    <!-- ── ABOUT ── -->
-    <section id="about" class="section-gap">
-      <article class="card span2">
-        <div class="eyebrow" aria-hidden="true">À propos</div>
-        <p class="about">
-          <em>ratnco</em> débarque sur Twitch avec une énergie brute et une authenticité rare.
-          Nouveau streamer, vrai passionné — pas de filtre, pas de façade.
-          Juste du contenu sincère, des sessions intenses et la volonté de construire
-          quelque chose de grand <em>ensemble</em>. L'aventure commence maintenant.
-        </p>
-      </article>
+    <!-- ═══ Accueil ═══ -->
+    <section id="accueil" class="hero" tabindex="-1" aria-labelledby="hero-h">
+      <div class="hero-inner">
+        <div class="frame">
+          <img class="avatar" id="avatar" src="https://files.catbox.moe/50idoe.png" data-fallback="assets/img/avatar.png" width="120" height="120" alt="Photo de profil Twitch de ratnco" fetchpriority="high" decoding="async">
+        </div>
+        <h1 id="hero-h" class="hero-name"><img class="hero-logo px" src="assets/img/logo.png" width="248" height="52" alt="ratnco"></h1>
+        <p class="hero-sub">Streamer <strong class="mc-gold">Minecraft</strong> · Twitch FR</p>
+        <p class="hero-type"><span class="sr-only">Survie, constructions et aventures Minecraft en direct.</span><span id="typer" aria-hidden="true">Survie, constructions &amp; aventures</span><span class="caret" aria-hidden="true">_</span></p>
+        <p class="live-badge" id="live-badge" data-state="loading" role="status"><span class="dot" aria-hidden="true"></span><span class="txt">Vérification du live…</span></p>
+        <div class="hero-cta">
+          <a class="btn btn-twitch btn-lg" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch"><i class="ico ico-twitch" aria-hidden="true"></i>Suivre sur Twitch</a>
+          <button type="button" class="btn btn-lg" data-copy="discord"><i class="ico ico-discord" aria-hidden="true"></i>Copier le pseudo Discord</button>
+        </div>
+      </div>
+      <div class="mine">
+        <button type="button" class="mine-block" id="mine-block" aria-label="Bloc d'herbe : clique ou maintiens pour le miner"><span class="mine-img" id="mine-img"></span></button>
+        <p class="mine-hint" aria-hidden="true">Maintiens pour miner</p>
+      </div>
+      <a class="scroll-hint" href="#live">Creuser <span aria-hidden="true">↓</span></a>
     </section>
 
-    <!-- ── LINKS + STATS ── -->
-    <section id="links" class="section-gap">
-      <div class="g2">
+    <div class="strata strata-grass" aria-hidden="true"></div>
 
-        <article class="card">
-          <div class="eyebrow" aria-hidden="true">Rejoindre</div>
-          <div class="links-stack">
-            <a class="lrow" href="https://www.twitch.tv/ratnco"
-               target="_blank" rel="noopener noreferrer" aria-label="Chaîne Twitch de ratnco">
-              <div class="l-ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"/></svg>
-              </div>
-              <div class="l-t">
-                <span class="t1">Twitch</span>
-                <span class="t2">twitch.tv/ratnco</span>
-              </div>
-              <span class="l-a" aria-hidden="true">→</span>
-            </a>
-
-            <button type="button" class="lrow-copy" id="copy-twitch"
-                    aria-label="Copier le lien Twitch">
-              <div class="l-ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-              </div>
-              <div class="l-t">
-                <span class="t1">Copier le lien</span>
-                <span class="t2">twitch.tv/ratnco</span>
-              </div>
-              <span class="l-a" aria-hidden="true">⧉</span>
-            </button>
-
-            <button type="button" class="lrow-copy" id="copy-discord"
-                    aria-label="Copier le nom Discord ratnco">
-              <div class="l-ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
-                </svg>
-              </div>
-              <div class="l-t">
-                <span class="t1">Discord</span>
-                <span class="t2">ratnco</span>
-              </div>
-              <span class="l-a" aria-hidden="true">⧉</span>
-            </button>
-          </div>
-          <button type="button" class="more-btn" id="btn-open-tw"
-                  aria-controls="pp-tw" aria-expanded="false">
-            En savoir plus sur ratnco →
-          </button>
-        </article>
-
-        <article class="card">
-          <div class="eyebrow" aria-hidden="true">Profil</div>
-          <div class="sg">
-            <div class="sb">
-              <div class="sv">FR</div>
-              <div class="sl">Langue</div>
-            </div>
-            <div class="sb">
-              <div class="sv" data-count="2024" data-suffix="">2024</div>
-              <div class="sl">Lancé en</div>
-            </div>
-            <div class="sb">
-              <div class="sv">Live</div>
-              <div class="sl">Contenu</div>
-            </div>
-            <div class="sb">
-              <div class="sv" data-count="100" data-suffix="%">100%</div>
-              <div class="sl">Authentique</div>
+    <!-- ═══ Live ═══ -->
+    <section id="live" class="section" tabindex="-1" aria-labelledby="live-h">
+      <h2 id="live-h" class="sec-title">En direct</h2>
+      <p class="sec-sub">Le live et le chat de la commu, en temps réel</p>
+      <div class="live-grid">
+        <div class="player reveal" id="player">
+          <img class="player-thumb" id="player-thumb" alt="" hidden>
+          <div class="player-msg" id="player-msg">
+            <i class="ico ico-eye ico-xl" aria-hidden="true"></i>
+            <p class="player-title" id="player-title">Connexion au serveur…</p>
+            <p class="player-desc" id="player-desc">On vérifie si ratnco est en live.</p>
+            <div class="player-actions">
+              <button type="button" class="btn" id="player-load">▶ Lancer le lecteur ici</button>
+              <a class="btn btn-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Ouvrir sur Twitch ↗</a>
             </div>
           </div>
-        </article>
-
+        </div>
+        <div class="mcchat reveal" id="mcchat">
+          <div class="mcchat-head">
+            <h3 class="mcchat-title">Chat de la commu</h3>
+            <span class="mcchat-status" id="chat-status" data-state="idle">en attente</span>
+          </div>
+          <ol class="mcchat-log" id="chat-log" role="log" aria-label="Messages du chat Twitch de ratnco"></ol>
+          <div class="mcchat-official" id="chat-official" hidden></div>
+          <div class="mcchat-foot">
+            <a class="btn btn-sm" href="https://www.twitch.tv/popout/ratnco/chat?popout=" target="_blank" rel="noopener">Écrire dans le chat ↗</a>
+            <button type="button" class="btn btn-sm" id="chat-toggle" aria-pressed="false">Chat officiel</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ── TWITCH CHAT ── -->
-    <section id="chat" class="section-gap">
-      <article class="card">
-        <div class="eyebrow" aria-hidden="true">Chat en direct</div>
-        <div class="chat-wrap">
-          <div class="chat-loader" aria-label="Chargement du chat Twitch">
-            <div class="chat-loader-ring"></div>
-            <p class="chat-loader-txt">Connexion au chat…</p>
+    <div class="strata strata-dirt" aria-hidden="true"></div>
+
+    <!-- ═══ Le monde de ratnco ═══ -->
+    <section id="monde" class="section" tabindex="-1" aria-labelledby="monde-h">
+      <h2 id="monde-h" class="sec-title">Le monde de ratnco</h2>
+      <p class="sec-sub">Qui est ratnco, et ce qu'on fait en live</p>
+      <div class="monde-grid">
+        <article class="book reveal" aria-labelledby="about-h">
+          <p class="book-page" aria-hidden="true">Page 1 sur 1</p>
+          <h3 id="about-h" class="book-title">À propos</h3>
+          <p><strong>ratnco</strong> débarque sur Twitch avec une énergie brute et une authenticité rare. Nouveau streamer <strong>Minecraft</strong>, vrai passionné : pas de filtre, pas de façade.</p>
+          <p>Juste des sessions intenses, des projets qui prennent forme bloc par bloc et la volonté de construire quelque chose de grand, <em>ensemble</em>.</p>
+          <p>Rejoindre la chaîne maintenant, c'est faire partie de l'aventure dès le début. Chaque viewer, chaque follow, <strong>ça compte vraiment</strong>.</p>
+          <p class="book-sign">— ratnco</p>
+        </article>
+        <div class="panel reveal">
+          <h3 class="panel-title">Au programme des lives</h3>
+          <ul class="activities" role="list">
+            <li class="activity">
+              <span class="slot"><i class="ico ico-heart" aria-hidden="true"></i></span>
+              <div><h4>Survie &amp; Hardcore</h4><p>Des mondes où chaque décision compte. En hardcore, une seule vie.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-planks" aria-hidden="true"></i></span>
+              <div><h4>Constructions</h4><p>Bases, villages et méga-projets, bloc par bloc avec les idées du chat.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-redstone" aria-hidden="true"></i></span>
+              <div><h4>Redstone &amp; mods</h4><p>Machines, fermes automatiques et modpacks pour jouer autrement.</p></div>
+            </li>
+            <li class="activity">
+              <span class="slot"><i class="ico ico-emerald" aria-hidden="true"></i></span>
+              <div><h4>Events commu</h4><p>Défis, mini-jeux et sessions entre viewers : la commu fait partie du jeu.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Planning ═══ -->
+    <section id="planning" class="section" tabindex="-1" aria-labelledby="planning-h">
+      <h2 id="planning-h" class="sec-title">Planning des lives</h2>
+      <p class="sec-sub" id="planning-sub">Les prochains rendez-vous dans l'Overworld</p>
+      <div class="panel planning reveal" id="planning-box">
+        <div class="planning-empty" id="planning-empty">
+          <i class="ico ico-clock ico-xl" aria-hidden="true"></i>
+          <div>
+            <h3 class="panel-title">Horaires annoncés sur Twitch &amp; Discord</h3>
+            <p>Active les notifications sur Twitch pour ne rater aucun live : un clic sur « Suivre » puis sur la cloche.</p>
+            <a class="btn btn-twitch" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Suivre ratnco ↗</a>
           </div>
-          <div class="chat-fallback" role="alert">
-            <p>Le chat Twitch ne peut pas se charger ici.<br>
-               Rejoins-nous directement sur
-               <a href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener noreferrer">twitch.tv/ratnco</a>.
-            </p>
+        </div>
+        <ol class="week" id="week" hidden></ol>
+        <p class="countdown" id="countdown" hidden></p>
+      </div>
+    </section>
+
+    <div class="strata strata-stone" aria-hidden="true"></div>
+
+    <!-- ═══ Rejoindre ═══ -->
+    <section id="rejoindre" class="section" tabindex="-1" aria-labelledby="rejoindre-h">
+      <h2 id="rejoindre-h" class="sec-title">Rejoindre l'aventure</h2>
+      <p class="sec-sub">Ton inventaire de liens</p>
+      <div class="panel inventory reveal">
+        <h3 class="panel-title">Inventaire</h3>
+        <ul class="inv-grid" id="inv-grid" role="list">
+          <li>
+            <a class="inv-item" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">
+              <span class="slot"><i class="ico ico-twitch" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Twitch</span><span class="inv-sub">twitch.tv/ratnco</span></span>
+              <span class="inv-act" aria-hidden="true">↗</span>
+            </a>
+          </li>
+          <li>
+            <button type="button" class="inv-item" data-copy="twitch">
+              <span class="slot"><i class="ico ico-map" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Copier le lien</span><span class="inv-sub">à partager</span></span>
+              <span class="inv-act" aria-hidden="true">⧉</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="inv-item" data-copy="discord">
+              <span class="slot"><i class="ico ico-discord" aria-hidden="true"></i></span>
+              <span class="inv-txt"><span class="inv-name">Discord</span><span class="inv-sub">pseudo : ratnco</span></span>
+              <span class="inv-act" aria-hidden="true">⧉</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══ Serveur (affiché si configuré) ═══ -->
+    <section id="serveur" class="section" tabindex="-1" aria-labelledby="serveur-h" hidden>
+      <h2 id="serveur-h" class="sec-title">Le serveur de la commu</h2>
+      <p class="sec-sub">Viens jouer avec nous</p>
+      <div class="server reveal" id="server-card">
+        <span class="server-icon"><i class="ico ico-grass ico-xl" aria-hidden="true"></i></span>
+        <div class="server-info">
+          <p class="server-name" id="server-name">Serveur</p>
+          <p class="server-motd" id="server-motd">Connexion…</p>
+          <p class="server-ip">IP : <code id="server-ip"></code></p>
+        </div>
+        <div class="server-side">
+          <p class="server-players" id="server-players">…</p>
+          <button type="button" class="btn btn-sm" data-copy="server">Copier l'IP</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Statistiques ═══ -->
+    <section id="stats" class="section" tabindex="-1" aria-labelledby="stats-h">
+      <h2 id="stats-h" class="sec-title">Statistiques</h2>
+      <p class="sec-sub">Données en direct de la chaîne</p>
+      <dl class="stats reveal" id="stats-list">
+        <div><dt>Followers</dt><dd id="stat-followers">…</dd></div>
+        <div><dt>Statut</dt><dd id="stat-status">…</dd></div>
+        <div id="stat-game-row" hidden><dt>Jeu en cours</dt><dd id="stat-game">—</dd></div>
+        <div id="stat-viewers-row" hidden><dt>Spectateurs</dt><dd id="stat-viewers">—</dd></div>
+        <div><dt>Langue</dt><dd>Français</dd></div>
+        <div><dt>Jeu de prédilection</dt><dd>Minecraft</dd></div>
+        <div><dt>Aventure lancée en</dt><dd>2024</dd></div>
+        <div><dt>Authenticité</dt><dd>100 %</dd></div>
+      </dl>
+    </section>
+
+    <div class="strata strata-deepslate" aria-hidden="true"></div>
+
+    <!-- ═══ Skin 3D ═══ -->
+    <section id="skin" class="section" tabindex="-1" aria-labelledby="skin-h">
+      <h2 id="skin-h" class="sec-title">Le skin de ratnco</h2>
+      <p class="sec-sub">Fais-le tourner à la souris, au doigt ou avec les flèches</p>
+      <div class="skin-box reveal">
+        <div class="skin-stage" id="skin-stage" tabindex="0" role="img" aria-label="Personnage Minecraft de ratnco en 3D. Utilise les flèches gauche et droite pour le faire pivoter.">
+          <div class="skin-shadow" aria-hidden="true"></div>
+        </div>
+        <div class="skin-actions">
+          <button type="button" class="btn btn-sm" id="skin-walk" aria-pressed="false">Marcher</button>
+          <button type="button" class="btn btn-sm" id="skin-wave">Saluer</button>
+          <button type="button" class="btn btn-sm" id="skin-reset">Recentrer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Clips (affiché si configuré) ═══ -->
+    <section id="clips" class="section" tabindex="-1" aria-labelledby="clips-h" hidden>
+      <h2 id="clips-h" class="sec-title">Best-of</h2>
+      <p class="sec-sub">Les meilleurs moments, accrochés au mur</p>
+      <ul class="clips" id="clips-list" role="list"></ul>
+    </section>
+
+    <!-- ═══ Partenaire ═══ -->
+    <section id="partenaire" class="section" tabindex="-1" aria-labelledby="partenaire-h">
+      <h2 id="partenaire-h" class="sec-title">Partenaire</h2>
+      <p class="sec-sub">Les alliés de l'aventure</p>
+      <article class="panel partner reveal">
+        <span class="slot slot-lg"><i class="ico ico-emerald ico-xl" aria-hidden="true"></i></span>
+        <div class="partner-txt">
+          <h3 class="partner-name">Odzigon <span class="badge">Partenaire officiel</span></h3>
+          <p><strong>Odzigon</strong> est un streamer et développeur passionné, et le créateur de ce site. Créateur de contenu engagé, développeur low-level &amp; web, figure de la scène francophone.</p>
+          <p class="partner-quote">« Fier de l'être. » — ratnco</p>
+          <div class="partner-cta">
+            <a class="btn btn-twitch btn-sm" href="https://www.twitch.tv/odzigon" target="_blank" rel="noopener" data-track="partner">Sa chaîne Twitch ↗</a>
+            <a class="btn btn-sm" href="https://odzigon.netlify.app/" target="_blank" rel="noopener" data-track="partner">Son site ↗</a>
           </div>
-          <iframe
-            id="twitch-iframe"
-            title="Chat en direct Twitch de ratnco"
-            frameborder="0"
-            scrolling="yes"
-            allowfullscreen="false"
-            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals"
-            aria-label="Chat Twitch de ratnco">
-          </iframe>
         </div>
       </article>
     </section>
-
-    <!-- ── PARTNER ── -->
-    <section id="partner" class="section-gap">
-      <article class="card">
-        <div class="eyebrow" aria-hidden="true">Partenaire</div>
-        <button type="button" class="prow" id="partner-btn"
-                aria-controls="pp-pa" aria-expanded="false"
-                aria-label="En savoir plus sur Odzigon, partenaire officiel">
-          <div class="p-av" aria-hidden="true">O</div>
-          <div>
-            <div class="p-nm">Odzigon</div>
-            <div class="p-badge">PARTENAIRE OFFICIEL</div>
-            <div class="p-qt">"fier de l'être"</div>
-          </div>
-          <span class="p-ar" aria-hidden="true">→</span>
-        </button>
-        <button type="button" class="more-btn" id="btn-open-pa"
-                aria-controls="pp-pa" aria-expanded="false">
-          En savoir plus sur Odzigon →
-        </button>
-      </article>
-    </section>
-
   </main>
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="card plain">
-      <div class="ft">
-        <p class="ft-by">
-          Site web fait par
-          <a href="https://odzigon.netlify.app/" target="_blank" rel="noopener noreferrer">Odzigon</a>
-        </p>
-        <p class="ft-sl">
-          « Jamais je ne demanderai de rémunérations pour mes créations
-          aux personnes qui me font avancer. »
-        </p>
-      </div>
+  <!-- ═══ Bedrock ═══ -->
+  <footer class="footer" id="credits" tabindex="-1">
+    <div class="footer-inner">
+      <p>Site web fait par <a href="https://odzigon.netlify.app/" target="_blank" rel="noopener">Odzigon</a></p>
+      <p class="footer-quote">« Jamais je ne demanderai de rémunérations pour mes créations aux personnes qui me font avancer. »</p>
+      <p class="footer-keys">Raccourcis : <kbd>1</kbd>–<kbd>9</kbd> barre rapide · <kbd>T</kbd> commandes · <kbd>F3</kbd> debug · <kbd>M</kbd> son · <kbd>V</kbd> vidéo · <kbd>O</kbd> options · <kbd>L</kbd> progrès · <kbd>Échap</kbd> menu</p>
+      <p class="footer-legal">Fan-site non officiel. Minecraft est une marque de Mojang AB. Ce site n'est ni approuvé ni affilié à Mojang ou Microsoft.</p>
     </div>
   </footer>
 
-</div><!-- /wrap -->
-
-<script>
-/* Expose settings-panel visibility to CSS before script.js loads */
-const sp = document.getElementById('settings-panel');
-if (sp) sp.removeAttribute('hidden');
-</script>
-<script>
-/* ═══════════════════════════════════════════════════════════
-   ratnco — script.js  v5
-═══════════════════════════════════════════════════════════ */
-(function () {
-'use strict';
-
-/* ══ CONSTANTS ══ */
-const KEYS = {
-  INTRO:      'ratnco_intro_seen',
-  VID:        'ratnco_vid',
-  PARTICLES:  'ratnco_particles',
-  CURSOR:     'ratnco_cursor',
-  ANIM:       'ratnco_anim',
-  VOL:        'ratnco_vol',
-  MUTED:      'ratnco_muted',
-};
-const ls = {
-  get: (k, def) => { try { const v = localStorage.getItem(k); return v === null ? def : JSON.parse(v); } catch { return def; } },
-  set: (k, v)   => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
-};
-
-/* ══ STATE ══ */
-let vol       = ls.get(KEYS.VOL,  0.40);
-let muted     = false; /* son actif par défaut, toujours */
-let curVid    = ls.get(KEYS.VID,   1);
-let vidLocked = false; /* prevent concurrent switches */
-let autoRotId = null;
-let glowFrame = false;
-let lastFocused = null;
-
-/* ══ DOM refs ══ */
-const $ = id => document.getElementById(id);
-const cd   = $('cd'), cr = $('cr');
-const v1   = $('v1'), v2 = $('v2');
-const vrEl = $('vr'), vnEl = $('vn');
-const muteBtn  = $('mute-btn');
-const vswBtn   = $('vsw');
-const volHud   = $('vol-hud');
-const backTop  = $('back-top');
-const scrollBar= $('scroll-bar');
-const navbar   = $('navbar');
-const entry    = $('entry');
-const entryBtn = $('enter-btn');
-const skipBtn  = $('skip-btn');
-const vidFallback = document.querySelector('.vid-fallback');
-const vidErrorMsg = $('vid-error');
-const settingsPanel  = $('settings-panel');
-const settingsClose  = $('settings-close');
-const settingsToggle = $('settings-toggle');
-
-/* ═══════════════════════════════════════════════════════════
-   PAGE LOADER
-═══════════════════════════════════════════════════════════ */
-window.addEventListener('load', () => {
-  const loader = $('page-loader');
-  if (loader) setTimeout(() => loader.classList.add('done'), 200);
-});
-
-/* ═══════════════════════════════════════════════════════════
-   CURSOR
-═══════════════════════════════════════════════════════════ */
-let mx = 0, my = 0, rx = 0, ry = 0;
-if (cd && cr) {
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cd.style.left = mx + 'px'; cd.style.top = my + 'px';
-  });
-  (function rafCursor() {
-    rx += (mx - rx) * .15; ry += (my - ry) * .15;
-    cr.style.left = rx + 'px'; cr.style.top = ry + 'px';
-    requestAnimationFrame(rafCursor);
-  })();
-  /* Cache curseur quand souris quitte la fenêtre */
-  document.addEventListener('mouseleave', () => { cd.style.opacity = '0'; cr.style.opacity = '0'; });
-  document.addEventListener('mouseenter', () => { cd.style.opacity = ''; cr.style.opacity = ''; });
-
-  /* Only activate hover effect on interactive elements */
-  const interactiveSelector = 'a, button, input, [tabindex], .lrow, .lrow-copy, .prow, .sb, .toggle-row';
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(interactiveSelector)) { cr.classList.add('h'); cd.classList.add('h'); }
-    else { cr.classList.remove('h'); cd.classList.remove('h'); }
-  });
-
-  /* Apply stored cursor pref */
-  if (!ls.get(KEYS.CURSOR, true)) document.body.classList.add('no-cursor');
-}
-
-/* ═══════════════════════════════════════════════════════════
-   SCROLL: PROGRESS + BACK-TOP + NAVBAR + SCROLLSPY
-═══════════════════════════════════════════════════════════ */
-const sections   = Array.from(document.querySelectorAll('section[id]'));
-const navLinks   = Array.from(document.querySelectorAll('.nav-link'));
-
-window.addEventListener('scroll', () => {
-  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = scrollH > 0 ? window.scrollY / scrollH : 0;
-  if (scrollBar) scrollBar.style.transform = 'scaleX(' + pct + ')';
-  if (backTop)   backTop.classList.toggle('vis', window.scrollY > 300);
-  if (navbar)    navbar.classList.toggle('scrolled', window.scrollY > 20);
-
-  /* Scrollspy */
-  let activeId = '';
-  sections.forEach(sec => {
-    const r = sec.getBoundingClientRect();
-    if (r.top <= 100) activeId = sec.id;
-  });
-  navLinks.forEach(l => {
-    const matches = l.getAttribute('href') === '#' + activeId;
-    l.classList.toggle('active', matches);
-  });
-}, { passive: true });
-
-if (backTop) backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-/* ═══════════════════════════════════════════════════════════
-   PARTICLES (entry screen)
-═══════════════════════════════════════════════════════════ */
-(function initParticles() {
-  const canvas = $('entry-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  let W, H, pts, stopAnim = false;
-
-  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
-  function make() {
-    pts = Array.from({ length: 48 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random() - .5) * .28, vy: (Math.random() - .5) * .28,
-      r: Math.random() * 1.3 + .4, a: Math.random(),
-    }));
-  }
-  function draw() {
-    if (stopAnim) return;
-    ctx.clearRect(0, 0, W, H);
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      p.a += .004; if (p.a > 1) p.a = 0;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(145,71,255,' + (p.a * .7) + ')'; ctx.fill();
-    }
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-        const d = Math.hypot(dx, dy);
-        if (d < 115) {
-          ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = 'rgba(145,71,255,' + ((1 - d / 115) * .1) + ')';
-          ctx.lineWidth = .5; ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-  resize(); make(); draw();
-  window.addEventListener('resize', () => { resize(); make(); }, { passive: true });
-  /* Stop when entry is gone */
-  const obs = new MutationObserver(() => {
-    if (entry && entry.classList.contains('gone')) stopAnim = true;
-  });
-  if (entry) obs.observe(entry, { attributes: true, attributeFilter: ['class'] });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   TYPEWRITER
-═══════════════════════════════════════════════════════════ */
-(function initTypewriter() {
-  const lines = ['nouveau streamer 🎮', 'passionné, authentique', 'chaîne Twitch FR', "rejoins l'aventure →"];
-  const el = $('tw'); if (!el) return;
-  let li = 0, ci = 0, deleting = false;
-  function tick() {
-    const cur = lines[li];
-    if (!deleting) {
-      el.textContent = cur.slice(0, ++ci);
-      if (ci === cur.length) { deleting = true; setTimeout(tick, 2000); return; }
-    } else {
-      el.textContent = cur.slice(0, --ci);
-      if (ci === 0) { deleting = false; li = (li + 1) % lines.length; }
-    }
-    setTimeout(tick, deleting ? 52 : 88);
-  }
-  setTimeout(tick, 2200);
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   VIDEO
-═══════════════════════════════════════════════════════════ */
-function showVidError(msg) {
-  if (!vidErrorMsg) return;
-  vidErrorMsg.textContent = msg || 'Vidéo indisponible';
-  vidErrorMsg.classList.add('show');
-  if (vidFallback) vidFallback.classList.add('show');
-  clearTimeout(showVidError._t);
-  showVidError._t = setTimeout(() => vidErrorMsg.classList.remove('show'), 4000);
-}
-
-function setVid(n) {
-  const active  = n === 1 ? v1 : v2;
-  const passive = n === 1 ? v2 : v1;
-  if (!active) return;
-
-  if (passive) {
-    passive.classList.remove('on');
-    try { passive.pause(); passive.muted = true; passive.volume = 0; } catch(e){}
-  }
-
-  curVid = n; ls.set(KEYS.VID, n);
-  const lbl = $('vsl'); if (lbl) lbl.textContent = 'Vidéo ' + n;
-
-  active.muted  = muted;
-  active.volume = muted ? 0 : vol;
-
-  const tryPlay = () => {
-    const pp = active.play();
-    if (!pp || typeof pp.catch !== 'function') return;
-    pp.catch(err => {
-      if (err && err.name === 'NotAllowedError') {
-        // Autoplay bloqué: fallback muet, pas d erreur visible
-        active.muted = true;
-        const pp2 = active.play();
-        if (pp2 && pp2.catch) pp2.catch(()=>{});
-      } else if (err && err.name !== 'AbortError') {
-        showVidError('Vidéo indisponible');
-      }
-    });
-  };
-  tryPlay();
-  requestAnimationFrame(() => active.classList.add('on'));
-}
-
-// Sécurité supplémentaire : si une vidéo non-active tente de jouer, on la stoppe
-[v1, v2].forEach((vd, i) => {
-  if (!vd) return;
-  vd.addEventListener('play', () => {
-    if (vidLocked) return;
-    if (curVid !== (i + 1)) { try { vd.pause(); vd.muted = true; } catch(e){} }
-  });
-});
-
-if (v1) v1.addEventListener('error', () => showVidError('Vidéo 1 indisponible'));
-if (v2) v2.addEventListener('error', () => showVidError('Vidéo 2 indisponible'));
-if (v1) v1.addEventListener('canplay', () => { if (vidFallback && v1.classList.contains('on')) vidFallback.classList.remove('show'); });
-if (v2) v2.addEventListener('canplay', () => { if (vidFallback && v2.classList.contains('on')) vidFallback.classList.remove('show'); });
-
-/* Video switch (crossfade, debounced) */
-function switchVideo() {
-  if (vidLocked) return;
-  vidLocked = true;
-  const next = curVid === 1 ? 2 : 1;
-  const leaving = curVid === 1 ? v1 : v2;
-  if (leaving) leaving.classList.remove('on');
-  setTimeout(() => {
-    try { setVid(next); } finally {
-      setTimeout(() => { vidLocked = false; }, 100);
-    }
-  }, 450);
-}
-
-if (vswBtn) vswBtn.addEventListener('click', switchVideo);
-
-/* Auto-rotation */
-function startAutoRot() {
-  if (autoRotId) return;
-  autoRotId = setInterval(switchVideo, 120000); /* 2 min */
-}
-function stopAutoRot() {
-  clearInterval(autoRotId); autoRotId = null;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   VOLUME & MUTE
-═══════════════════════════════════════════════════════════ */
-function applyVol() {
-  const effective = muted ? 0 : vol;
-  const activeVid = curVid === 1 ? v1 : v2;
-  const passiveVid = curVid === 1 ? v2 : v1;
-  if (activeVid)  { activeVid.volume = effective; activeVid.muted = muted; }
-  if (passiveVid) { passiveVid.volume = 0; passiveVid.muted = true; }
-}
-function updateVolUI() {
-  if (vrEl)  { vrEl.value = Math.round(vol * 100); vrEl.setAttribute('aria-valuenow', vrEl.value); }
-  if (vnEl)  vnEl.textContent = muted ? 'Muet' : Math.round(vol * 100) + '%';
-  const vlines = $('vlines');
-  if (vlines) vlines.setAttribute('opacity', (muted || vol === 0) ? '0' : '1');
-  if (muteBtn) muteBtn.classList.toggle('muted', muted);
-}
-
-if (vrEl) {
-  vrEl.addEventListener('input', () => {
-    vol = vrEl.value / 100; ls.set(KEYS.VOL, vol);
-    if (!muted) applyVol();
-    updateVolUI();
-  });
-}
-if (muteBtn) {
-  muteBtn.addEventListener('click', () => {
-    muted = !muted; ls.set(KEYS.MUTED, muted);
-    muteBtn.setAttribute('aria-pressed', muted);
-    muteBtn.setAttribute('aria-label', muted ? 'Rétablir le son' : 'Couper le son');
-    applyVol(); updateVolUI();
-    toast(muted ? 'Son coupé' : 'Son rétabli', 'info');
-  });
-}
-/* init */
-applyVol(); updateVolUI();
-
-/* ═══════════════════════════════════════════════════════════
-   ENTRY
-═══════════════════════════════════════════════════════════ */
-function enterSite() {
-  entry.classList.add('gone');
-  ls.set(KEYS.INTRO, true);
-  /* Geste utilisateur garanti -> on peut activer le son */
-  muted = false;
-  ls.set(KEYS.MUTED, false);
-  if (muteBtn) {
-    muteBtn.classList.remove('muted');
-    muteBtn.setAttribute('aria-pressed', 'false');
-  }
-  setVid(curVid);
-  applyVol();
-  updateVolUI();
-  setTimeout(() => {
-    if (volHud) volHud.classList.add('vis');
-    if (vswBtn) vswBtn.classList.add('vis');
-    if (ls.get('ratnco_autorot', false)) startAutoRot();
-  }, 900);
-}
-
-/* Skip if already seen */
-if (ls.get(KEYS.INTRO, false)) {
-  muted = true; /* autoplay policy: démarrer muet sans geste user */
-  setTimeout(() => {
-    entry.classList.add('gone');
-    setVid(curVid);
-    const restore = () => {
-      muted = false; applyVol(); updateVolUI();
-      if (muteBtn) { muteBtn.classList.remove('muted'); muteBtn.setAttribute('aria-pressed','false'); }
-      window.removeEventListener('click', restore);
-      window.removeEventListener('keydown', restore);
-      window.removeEventListener('touchstart', restore);
-    };
-    window.addEventListener('click', restore, { once: true });
-    window.addEventListener('keydown', restore, { once: true });
-    window.addEventListener('touchstart', restore, { once: true });
-    setTimeout(() => {
-      if (volHud) volHud.classList.add('vis');
-      if (vswBtn) vswBtn.classList.add('vis');
-      if (ls.get('ratnco_autorot', false)) startAutoRot();
-    }, 600);
-  }, 200);
-} else {
-  if (entryBtn) entryBtn.addEventListener('click', enterSite);
-  if (skipBtn)  skipBtn.addEventListener('click',  enterSite);
-  document.addEventListener('keydown', function onEntryKey(e) {
-    if (!entry.classList.contains('gone') && (e.key === 'Enter' || e.key === ' ')) {
-      e.preventDefault(); enterSite();
-      document.removeEventListener('keydown', onEntryKey);
-    }
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CARD MOUSE GLOW (rAF throttled)
-═══════════════════════════════════════════════════════════ */
-document.querySelectorAll('.card').forEach(c => {
-  c.addEventListener('mousemove', e => {
-    if (glowFrame) return;
-    glowFrame = true;
-    requestAnimationFrame(() => {
-      const r = c.getBoundingClientRect();
-      c.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
-      c.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
-      glowFrame = false;
-    });
-  }, { passive: true });
-});
-
-/* ═══════════════════════════════════════════════════════════
-   CARD ENTRANCE
-═══════════════════════════════════════════════════════════ */
-const cardMap = new Map();
-document.querySelectorAll('.card').forEach((c, i) => cardMap.set(c, i));
-const io = new IntersectionObserver(entries => {
-  entries.forEach(ent => {
-    if (ent.isIntersecting) {
-      const i = cardMap.get(ent.target) ?? 0;
-      setTimeout(() => ent.target.classList.add('in'), i * 80);
-      io.unobserve(ent.target);
-    }
-  });
-}, { threshold: .06 });
-document.querySelectorAll('.card').forEach(c => io.observe(c));
-
-/* ═══════════════════════════════════════════════════════════
-   ANIMATED STATS
-═══════════════════════════════════════════════════════════ */
-function animateCount(el, target, suffix, duration) {
-  let start = null;
-  const step = ts => {
-    if (!start) start = ts;
-    const p = Math.min((ts - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(eased * target) + (suffix || '');
-    if (p < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-const statObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const el = e.target;
-    const val = parseInt(el.dataset.count, 10);
-    const suffix = el.dataset.suffix || '';
-    if (!isNaN(val)) animateCount(el, val, suffix, 1200);
-    statObs.unobserve(el);
-  });
-}, { threshold: .5 });
-document.querySelectorAll('[data-count]').forEach(el => statObs.observe(el));
-
-/* ═══════════════════════════════════════════════════════════
-   POPUPS (accessible, focus-trapped)
-═══════════════════════════════════════════════════════════ */
-function getFocusable(container) {
-  return [...container.querySelectorAll('button, a[href], input, [tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled && el.offsetParent !== null);
-}
-
-function openPop(id) {
-  lastFocused = document.activeElement;
-  const popup = $(id); if (!popup) return;
-  document.querySelectorAll('.pbg.open').forEach(p => closePop(p.id));
-  popup.classList.add('open');
-  popup.setAttribute('aria-hidden', 'false');
-  /* Update aria-expanded on trigger button */
-  const btn = document.querySelector('[aria-controls="' + id + '"]');
-  if (btn) btn.setAttribute('aria-expanded', 'true');
-  const focusable = getFocusable(popup);
-  if (focusable.length) setTimeout(() => focusable[0].focus(), 60);
-}
-
-function closePop(id) {
-  const popup = $(id); if (!popup) return;
-  popup.classList.remove('open');
-  popup.setAttribute('aria-hidden', 'true');
-  const btn = document.querySelector('[aria-controls="' + id + '"]');
-  if (btn) btn.setAttribute('aria-expanded', 'false');
-  if (lastFocused && document.contains(lastFocused)) lastFocused.focus();
-}
-
-/* Focus trap */
-document.querySelectorAll('.pbg').forEach(overlay => {
-  overlay.setAttribute('aria-hidden', 'true');
-  overlay.addEventListener('keydown', e => {
-    if (!overlay.classList.contains('open')) return;
-    const focusable = getFocusable(overlay);
-    if (!focusable.length) return;
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const idx  = focusable.indexOf(document.activeElement);
-      const next = e.shiftKey
-        ? focusable[(idx - 1 + focusable.length) % focusable.length]
-        : focusable[(idx + 1) % focusable.length];
-      next.focus();
-    }
-  });
-  /* Click outside */
-  overlay.addEventListener('click', e => { if (e.target === overlay) closePop(overlay.id); });
-});
-
-/* Bind close buttons (no inline onclick) */
-const closeMap = { 'pp-tw-close': 'pp-tw', 'pp-pa-close': 'pp-pa' };
-Object.entries(closeMap).forEach(([btnId, popId]) => {
-  const el = $(btnId); if (el) el.addEventListener('click', () => closePop(popId));
-});
-/* Bind open buttons */
-const openMap = { 'btn-open-tw': 'pp-tw', 'btn-open-pa': 'pp-pa', 'partner-btn': 'pp-pa' };
-Object.entries(openMap).forEach(([btnId, popId]) => {
-  const el = $(btnId); if (el) el.addEventListener('click', () => openPop(popId));
-});
-
-/* ═══════════════════════════════════════════════════════════
-   SETTINGS PANEL
-═══════════════════════════════════════════════════════════ */
-let settingsOpen = false;
-
-function toggleSettings(force) {
-  settingsOpen = typeof force === 'boolean' ? force : !settingsOpen;
-  if (settingsPanel) settingsPanel.classList.toggle('open', settingsOpen);
-  if (settingsToggle) settingsToggle.setAttribute('aria-expanded', settingsOpen);
-  if (settingsOpen) {
-    const focusable = getFocusable(settingsPanel);
-    if (focusable.length) setTimeout(() => focusable[0].focus(), 80);
-  }
-}
-
-if (settingsToggle) settingsToggle.addEventListener('click', () => toggleSettings());
-if (settingsClose)  settingsClose.addEventListener('click', () => toggleSettings(false));
-
-/* Settings panel click outside */
-document.addEventListener('click', e => {
-  if (settingsOpen && settingsPanel && !settingsPanel.contains(e.target)
-      && settingsToggle && !settingsToggle.contains(e.target))
-    toggleSettings(false);
-});
-if (settingsPanel) settingsPanel.addEventListener('keydown', e => {
-  if (e.key === 'Escape') toggleSettings(false);
-});
-
-/* Toggle rows */
-function initToggle(id, prefKey, defVal, onChange) {
-  const input = $(id); if (!input) return;
-  input.checked = ls.get(prefKey, defVal);
-  onChange(input.checked);
-  input.addEventListener('change', () => { ls.set(prefKey, input.checked); onChange(input.checked); });
-}
-
-initToggle('toggle-particles', KEYS.PARTICLES, true, v => {
-  document.body.classList.toggle('no-particles', !v);
-});
-initToggle('toggle-cursor', KEYS.CURSOR, true, v => {
-  document.body.classList.toggle('no-cursor', !v);
-});
-initToggle('toggle-anim', KEYS.ANIM, false, v => {
-  document.body.classList.toggle('reduce-motion', v);
-});
-initToggle('toggle-autorot', 'ratnco_autorot', false, v => {
-  if (v) startAutoRot(); else stopAutoRot();
-});
-
-/* ═══════════════════════════════════════════════════════════
-   TOASTS
-═══════════════════════════════════════════════════════════ */
-function toast(message, type) {
-  const container = $('toast-container'); if (!container) return;
-  const el = document.createElement('div');
-  el.className = 'toast';
-  const dot = document.createElement('span');
-  dot.className = 'toast-dot ' + (type || 'info');
-  el.appendChild(dot);
-  el.appendChild(document.createTextNode(message));
-  container.appendChild(el);
-  setTimeout(() => {
-    el.classList.add('out');
-    el.addEventListener('animationend', () => el.remove(), { once: true });
-  }, 2800);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   COPY UTILITIES
-═══════════════════════════════════════════════════════════ */
-function copyText(text, label) {
-  navigator.clipboard.writeText(text)
-    .then(() => toast(label + ' copié !', 'ok'))
-    .catch(() => toast('Copie échouée', 'error'));
-}
-
-const copyBtns = {
-  'copy-discord': { text: 'ratnco',  label: 'Discord' },
-  'copy-twitch':  { text: 'https://www.twitch.tv/ratnco', label: 'Lien Twitch' },
-};
-Object.entries(copyBtns).forEach(([id, { text, label }]) => {
-  const el = $(id); if (el) el.addEventListener('click', () => copyText(text, label));
-});
-
-/* ═══════════════════════════════════════════════════════════
-   TWITCH CHAT IFRAME
-═══════════════════════════════════════════════════════════ */
-(function initChat() {
-  const iframe  = $('twitch-iframe');
-  const loader  = document.querySelector('.chat-loader');
-  const fallback= document.querySelector('.chat-fallback');
-  if (!iframe) return;
-
-  const hostname = window.location.hostname || 'localhost';
-  const parent   = hostname === '' ? 'localhost' : hostname;
-  iframe.src = 'https://www.twitch.tv/embed/ratnco/chat?darkpopout&parent=' + parent;
-
-  /* Timeout fallback: if not loaded in 8s, show fallback */
-  const timeout = setTimeout(() => {
-    if (loader)   loader.classList.add('hidden');
-    if (fallback) fallback.classList.add('show');
-  }, 10000);
-
-  iframe.addEventListener('load', () => {
-    clearTimeout(timeout);
-    if (loader) loader.classList.add('hidden');
-    iframe.classList.add('ready');
-  });
-  iframe.addEventListener('error', () => {
-    clearTimeout(timeout);
-    if (loader)   loader.classList.add('hidden');
-    if (fallback) fallback.classList.add('show');
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
-═══════════════════════════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  /* Skip if typing in input or entry screen still showing */
-  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-  if (entry && !entry.classList.contains('gone')) return;
-  /* Close any open popup first */
-  const openPopup = document.querySelector('.pbg.open');
-  if (e.key === 'Escape') {
-    if (openPopup) { closePop(openPopup.id); return; }
-    if (settingsOpen) { toggleSettings(false); return; }
-  }
-  if (openPopup || settingsOpen) return; /* Don't fire shortcuts while modal is open */
-
-  switch (e.key.toLowerCase()) {
-    case 'm':
-      if (muteBtn) muteBtn.click();
-      break;
-    case 'v':
-      switchVideo();
-      break;
-    case 's':
-      e.preventDefault();
-      toggleSettings();
-      break;
-    case 'arrowup':
-      e.preventDefault();
-      vol = Math.min(1, vol + .05); ls.set(KEYS.VOL, vol);
-      applyVol(); updateVolUI();
-      break;
-    case 'arrowdown':
-      e.preventDefault();
-      vol = Math.max(0, vol - .05); ls.set(KEYS.VOL, vol);
-      applyVol(); updateVolUI();
-      break;
-  }
-});
-
-/* Apply stored anim reduction pref on load */
-if (ls.get(KEYS.ANIM, false)) document.body.classList.add('reduce-motion');
-
-/* ═══ Pause vidéo quand l'onglet est caché ═══ */
-document.addEventListener('visibilitychange', () => {
-  const active = curVid === 1 ? v1 : v2;
-  if (!active) return;
-  if (document.hidden) { try { active.pause(); } catch(e){} }
-  else { active.play().catch(()=>{}); }
-});
-
-
-/* Nouveaux contrôles settings */
-(function(){
-  const setVol=$('set-vol'), setVolVal=$('set-vol-val');
-  const setBright=$('set-bright'), setBrightVal=$('set-bright-val');
-  const setSpeed=$('set-speed'), setSpeedVal=$('set-speed-val');
-  if(setVol){
-    setVol.value=Math.round(vol*100); setVolVal.textContent=setVol.value+'%';
-    setVol.addEventListener('input',()=>{
-      vol=setVol.value/100; ls.set(KEYS.VOL,vol);
-      setVolVal.textContent=setVol.value+'%';
-      if(vrEl) vrEl.value=setVol.value;
-      applyVol(); updateVolUI();
-    });
-  }
-  if(setBright){
-    const saved=ls.get('ratnco_bright',36);
-    setBright.value=saved; setBrightVal.textContent=saved+'%';
-    const apply=v=>{ [v1,v2].forEach(vd=>{ if(vd) vd.style.filter=`brightness(${v/100}) contrast(1.35) saturate(1.5)`; }); };
-    apply(saved);
-    setBright.addEventListener('input',()=>{
-      const v=+setBright.value; ls.set('ratnco_bright',v);
-      setBrightVal.textContent=v+'%'; apply(v);
-    });
-  }
-  if(setSpeed){
-    const saved=ls.get('ratnco_speed',100);
-    setSpeed.value=saved; setSpeedVal.textContent=(saved/100).toFixed(2)+'×';
-    const apply=v=>{ [v1,v2].forEach(vd=>{ if(vd) try{vd.playbackRate=v/100;}catch(e){} }); };
-    apply(saved);
-    setSpeed.addEventListener('input',()=>{
-      const v=+setSpeed.value; ls.set('ratnco_speed',v);
-      setSpeedVal.textContent=(v/100).toFixed(2)+'×'; apply(v);
-    });
-  }
-  const b1=$('btn-vid1'), b2=$('btn-vid2');
-  if(b1) b1.addEventListener('click',()=>{ if(curVid!==1) switchVideo(); });
-  if(b2) b2.addEventListener('click',()=>{ if(curVid!==2) switchVideo(); });
-  const br=$('btn-reset');
-  if(br) br.addEventListener('click',()=>{
-    if(confirm('Réinitialiser tous les paramètres ?')){
-      try{ Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
-           ['ratnco_autorot','ratnco_bright','ratnco_speed'].forEach(k=>localStorage.removeItem(k)); }catch(e){}
-      location.reload();
-    }
-  });
-})();
-
-
-/* MC v6 features */
-(function(){
-  /* Scroll bar -> width au lieu de scale */
-  window.addEventListener('scroll', () => {
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
-    document.documentElement.style.setProperty('--scroll-pct', pct.toFixed(1) + '%');
-    const lvl = Math.floor(pct / 5);
-    const xp = document.getElementById('xp-level');
-    if (xp) xp.textContent = 'LVL ' + lvl;
-  }, { passive: true });
-
-  /* Particules flottantes violettes */
-  const container = document.getElementById('mc-particles');
-  if (container) {
-    for (let i = 0; i < 14; i++) {
-      const p = document.createElement('div');
-      p.className = 'mc-particle';
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDelay = Math.random() * 12 + 's';
-      p.style.animationDuration = (10 + Math.random() * 6) + 's';
-      container.appendChild(p);
-    }
-  }
-
-  /* Konami code easter egg: achievement */
-  const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  let idx = 0;
-  document.addEventListener('keydown', e => {
-    if (e.key.toLowerCase() === konami[idx].toLowerCase() || e.key === konami[idx]) {
-      idx++;
-      if (idx === konami.length) {
-        idx = 0;
-        showAchievement('Easter Egg !', 'Konami Code activé', 'redstone');
-        document.body.style.animation = 'mcFloat 1s ease-in-out 3';
-        setTimeout(()=>document.body.style.animation='', 3000);
-      }
-    } else { idx = 0; }
-  });
-
-  /* Queue pour empiler plusieurs achievements */
-  const achQueue = [];
-  let achShowing = false;
-  window.showAchievement = function(title, desc, variant) {
-    achQueue.push({ title, desc, variant: variant || 'gold' });
-    if (!achShowing) processAchQueue();
-  };
-  function processAchQueue() {
-    if (!achQueue.length) { achShowing = false; return; }
-    achShowing = true;
-    const { title, desc, variant } = achQueue.shift();
-    const el = document.createElement('div');
-    el.style.cssText = `
-      position:fixed; top:80px; right:20px; z-index:10001;
-      background:linear-gradient(180deg,#2a1a48,#15092a);
-      border:3px solid #0a0612;
-      box-shadow:inset -3px -3px 0 rgba(0,0,0,.4), inset 3px 3px 0 rgba(255,255,255,.15), 0 6px 0 #0a0612, 0 0 30px rgba(252,220,95,.4);
-      padding:12px 16px; display:flex; gap:12px; align-items:center;
-      transform:translateX(120%); transition:transform .5s cubic-bezier(.16,1,.3,1);
-      min-width:280px; max-width:320px;
-    `;
-    el.innerHTML = `
-      <div class="ach-icon ${variant}"></div>
-      <div>
-        <div style="font-family:'Press Start 2P',monospace;font-size:.5rem;color:#fcdc5f;text-shadow:2px 2px 0 #000;margin-bottom:5px;line-height:1.3">${title}</div>
-        <div style="font-family:'VT323',monospace;font-size:1.05rem;color:#fff;line-height:1.2">${desc}</div>
-      </div>`;
-    document.body.appendChild(el);
-    /* Son "ding" via AudioContext */
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'square'; o.frequency.value = 880;
-      g.gain.value = 0.04;
-      o.start(); o.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.15);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-      o.stop(ctx.currentTime + 0.3);
-    } catch(e){}
-    requestAnimationFrame(() => { el.style.transform = 'none'; });
-    setTimeout(() => {
-      el.style.transform = 'translateX(120%)';
-      setTimeout(() => { el.remove(); processAchQueue(); }, 500);
-    }, 3500);
-  }
-  /* Helper: débloquer un succès une seule fois */
-  function unlock(key, title, desc, variant) {
-    if (localStorage.getItem('ratnco_ach_'+key)) return;
-    localStorage.setItem('ratnco_ach_'+key, '1');
-    showAchievement(title, desc, variant);
-  }
-  /* Catalogue de succès */
-  setTimeout(() => unlock('welcome', 'Bienvenue !', 'Tu as rejoint ratnco', 'gold'), 3500);
-  document.querySelectorAll('.tw-pill, [href*="twitch.tv/ratnco"]').forEach(el => {
-    el.addEventListener('click', () => unlock('twitch', 'First Click !', 'Tu as visité la chaîne Twitch', 'purple'));
-  });
-  const copyTw = document.getElementById('copy-twitch');
-  if (copyTw) copyTw.addEventListener('click', () => unlock('copy_tw', 'Partageur', 'Lien Twitch copié', 'emerald'));
-  const copyDc = document.getElementById('copy-discord');
-  if (copyDc) copyDc.addEventListener('click', () => unlock('copy_dc', 'Rejoins le Discord', 'Pseudo Discord copié', 'diamond'));
-  /* Scroll 100% */
-  window.addEventListener('scroll', () => {
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    if (h > 0 && window.scrollY / h > 0.98) unlock('bottom', 'Explorateur', 'Tu as tout lu', 'emerald');
-  }, { passive: true });
-  /* Switch vidéo */
-  const vsw = document.getElementById('vsw');
-  if (vsw) vsw.addEventListener('click', () => unlock('switch', 'Changement de décor', 'Vidéo changée', 'diamond'));
-  /* Mute */
-  const mb = document.getElementById('mute-btn');
-  if (mb) mb.addEventListener('click', () => unlock('mute', 'Silence !', 'Son coupé pour la première fois', 'iron'));
-  /* Partner */
-  const pb = document.getElementById('partner-btn');
-  if (pb) pb.addEventListener('click', () => unlock('partner', 'Allié Découvert', 'Tu connais Odzigon', 'purple'));
-  /* Settings ouvert */
-  const st = document.getElementById('settings-toggle');
-  if (st) st.addEventListener('click', () => unlock('settings', 'Bricoleur', 'Tu as ouvert les réglages', 'redstone'));
-  /* Temps sur le site: 2 min */
-  setTimeout(() => unlock('time2', 'Fidèle', '2 minutes sur le site', 'gold'), 120000);
-  setTimeout(() => unlock('time5', 'Habitué', '5 minutes sur le site', 'diamond'), 300000);
-  /* Secret: clic 10x sur le titre */
-  let titleClicks = 0;
-  const hn = document.querySelector('.h-name');
-  if (hn) hn.addEventListener('click', () => {
-    titleClicks++;
-    if (titleClicks === 10) unlock('tap10', 'Fan acharné', 'Tu as tapé 10 fois sur le titre', 'redstone');
-  });
-
-
-
-  /* Bouton reset achievements */
-  window.resetAchievements = () => {
-    Object.keys(localStorage).filter(k=>k.startsWith('ratnco_ach_')).forEach(k=>localStorage.removeItem(k));
-    showAchievement('Reset !', 'Succès réinitialisés');
-  };
-})();
-
-})(); /* end IIFE */
-</script>
+  <!-- ═══ Barre d'XP + barre rapide ═══ -->
+  <nav class="hotbar-wrap" id="hotbar" aria-label="Barre rapide">
+    <p class="item-name" id="item-name" aria-hidden="true"></p>
+    <div class="xp" aria-hidden="true">
+      <span class="xp-level" id="xp-level">0</span>
+      <div class="xp-bar"><span class="xp-fill" id="xp-fill"></span></div>
+    </div>
+    <ol class="hotbar">
+      <li><a class="hb-slot" href="#accueil" data-name="Accueil"><i class="ico ico-grass" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">1</span><span class="sr-only">Accueil</span></a></li>
+      <li><a class="hb-slot" href="#live" data-name="En direct"><i class="ico ico-eye" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">2</span><span class="sr-only">En direct</span></a></li>
+      <li><a class="hb-slot" href="#monde" data-name="Le monde de ratnco"><i class="ico ico-book" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">3</span><span class="sr-only">Le monde de ratnco</span></a></li>
+      <li><a class="hb-slot" href="#planning" data-name="Planning"><i class="ico ico-clock" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">4</span><span class="sr-only">Planning</span></a></li>
+      <li><a class="hb-slot" href="#rejoindre" data-name="Rejoindre"><i class="ico ico-chest" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">5</span><span class="sr-only">Rejoindre</span></a></li>
+      <li><a class="hb-slot" href="#stats" data-name="Statistiques"><i class="ico ico-map" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">6</span><span class="sr-only">Statistiques</span></a></li>
+      <li><a class="hb-slot" href="#skin" data-name="Skin 3D"><i class="ico ico-chestplate" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">7</span><span class="sr-only">Skin 3D</span></a></li>
+      <li><a class="hb-slot" href="#partenaire" data-name="Partenaire"><i class="ico ico-emerald" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">8</span><span class="sr-only">Partenaire</span></a></li>
+      <li><a class="hb-slot" href="#credits" data-name="Bedrock (crédits)"><i class="ico ico-bedrock" aria-hidden="true"></i><span class="hb-key" aria-hidden="true">9</span><span class="sr-only">Crédits</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- Messages façon chat du jeu (notifications + commandes) -->
+  <div class="chatlog" id="chatlog" role="status" aria-live="polite"></div>
+</div>
+
+<!-- Progrès (toasts) -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- Barre de commande -->
+<form class="cmd" id="cmd" hidden autocomplete="off">
+  <ul class="cmd-suggest" id="cmd-suggest" role="listbox" aria-label="Suggestions de commandes"></ul>
+  <label class="sr-only" for="cmd-input">Commande (tape /help pour la liste)</label>
+  <input class="cmd-input" id="cmd-input" type="text" spellcheck="false" autocapitalize="off" enterkeyhint="send" aria-autocomplete="list" aria-controls="cmd-suggest">
+</form>
+
+<!-- Écran de debug F3 -->
+<div class="f3" id="f3" hidden aria-hidden="true"><div class="f3-col" id="f3-left"></div><div class="f3-col f3-right" id="f3-right"></div></div>
+
+<!-- Couche TNT / effets -->
+<div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+
+<!-- ═══ Options ═══ -->
+<dialog class="screen screen-dirt" id="dlg-options" aria-labelledby="opt-h">
+  <div class="screen-inner">
+    <h2 class="screen-title" id="opt-h">Options</h2>
+    <div class="opt-grid">
+      <button type="button" class="btn" data-opt="ambiance">Ambiance : Auto</button>
+      <button type="button" class="btn" data-opt="particles" aria-pressed="true">Particules : ON</button>
+      <button type="button" class="btn" data-opt="videoOn" aria-pressed="true">Vidéo de fond : ON</button>
+      <button type="button" class="btn" data-opt="video">Vidéo : 1</button>
+      <div class="slider"><input type="range" id="opt-volume" min="0" max="100" step="5" aria-label="Volume de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <div class="slider"><input type="range" id="opt-brightness" min="10" max="100" step="5" aria-label="Luminosité de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <div class="slider"><input type="range" id="opt-speed" min="50" max="150" step="5" aria-label="Vitesse de lecture de la vidéo"><span class="slider-label" aria-hidden="true"></span></div>
+      <button type="button" class="btn" data-opt="autoRotate" aria-pressed="false">Rotation des vidéos : OFF</button>
+      <button type="button" class="btn" data-opt="sfx" aria-pressed="false">Sons de l'interface : OFF</button>
+      <button type="button" class="btn" data-opt="motion">Animations : Auto</button>
+      <button type="button" class="btn" data-opt="readable" aria-pressed="false">Police : Pixel</button>
+      <button type="button" class="btn" data-opt="cursor" aria-pressed="true">Curseur pixel : ON</button>
+      <button type="button" class="btn" data-opt="coords" aria-pressed="true">Coordonnées : ON</button>
+      <button type="button" class="btn" data-opt="titleAlways" aria-pressed="false">Écran titre : 1re visite</button>
+      <button type="button" class="btn" data-action="progress">Progrès…</button>
+      <button type="button" class="btn" data-action="reset">Réinitialiser…</button>
+    </div>
+    <p class="screen-note">Raccourcis : 1–9 barre rapide · T ou / commandes · F3 debug · M son · V vidéo · L progrès · Échap menu</p>
+    <button type="button" class="btn btn-wide" data-close>Terminé</button>
+  </div>
+</dialog>
+
+<!-- ═══ Menu du jeu (Échap) ═══ -->
+<dialog class="screen screen-dim" id="dlg-pause" aria-labelledby="pause-h">
+  <div class="screen-inner screen-center">
+    <h2 class="screen-title" id="pause-h">Menu du jeu</h2>
+    <button type="button" class="btn btn-wide" data-close>Retour au site</button>
+    <div class="menu-row">
+      <button type="button" class="btn" data-action="progress">Progrès</button>
+      <button type="button" class="btn" data-action="stats">Statistiques</button>
+    </div>
+    <div class="menu-row">
+      <a class="btn" href="https://www.twitch.tv/ratnco" target="_blank" rel="noopener" data-track="twitch">Twitch ↗</a>
+      <button type="button" class="btn" data-copy="discord">Discord</button>
+    </div>
+    <button type="button" class="btn btn-wide" data-action="options">Options…</button>
+    <button type="button" class="btn btn-wide" data-action="title">Écran titre</button>
+  </div>
+</dialog>
+
+<!-- ═══ Progrès ═══ -->
+<dialog class="screen screen-dirt" id="dlg-progress" aria-labelledby="prog-h">
+  <div class="screen-inner">
+    <h2 class="screen-title" id="prog-h" tabindex="-1" autofocus>Progrès <span class="prog-count" id="prog-count"></span></h2>
+    <ul class="adv-list" id="adv-list" role="list"></ul>
+    <button type="button" class="btn btn-wide" data-close>Terminé</button>
+  </div>
+</dialog>
+
+<!-- ═══ Mort ═══ -->
+<dialog class="screen screen-death" id="dlg-death" aria-labelledby="death-h">
+  <div class="screen-inner screen-center">
+    <h2 class="death-title" id="death-h">Vous êtes mort !</h2>
+    <p class="death-cause" id="death-cause">ratnco a utilisé /kill</p>
+    <p>Score : <span class="mc-yellow" id="death-score">0</span></p>
+    <button type="button" class="btn btn-wide" data-close>Réapparaître</button>
+    <button type="button" class="btn btn-wide" data-action="title">Écran titre</button>
+  </div>
+</dialog>
+
+<noscript><p class="noscript">JavaScript est désactivé : le contenu reste lisible, mais le live, le chat et les effets sont indisponibles.</p></noscript>
 </body>
 </html>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /tools/
+
+Sitemap: https://ratnco.netlify.app/sitemap.xml
